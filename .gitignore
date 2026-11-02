@@ -1,0 +1,23 @@
+
+# Ambiente virtual
+.venv/
+venv/
+
+# Banco de dados local
+db.sqlite3
+db.sqlite3-journal
+
+# Arquivos temporários do Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Configurações sensíveis
+.env
+.env.*
+
+# Arquivos do editor
+.vscode/
+
+# Arquivos temporários
+*.log

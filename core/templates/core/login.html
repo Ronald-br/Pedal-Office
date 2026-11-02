@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Pedal Office</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f7f8fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-card {
+            max-width: 440px;
+            border-radius: 22px;
+        }
+
+        .brand {
+            font-weight: 800;
+        }
+
+        .pedal {
+            color: #e53935;
+        }
+
+        .office {
+            color: #f59e0b;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 13px;
+        }
+
+        .form-control:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+        }
+
+        .btn-login {
+            background-color: #f97316;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 600;
+        }
+
+        .btn-login:hover {
+            background-color: #ea580c;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
+
+        <div class="card login-card border-0 shadow-lg w-100">
+            <div class="card-body p-4 p-md-5">
+
+                <!-- Identidade visual -->
+                <div class="text-center mb-4">
+
+                    <div style="font-size: 3rem;">
+                        🚲
+                    </div>
+
+                    <h1 class="brand h2 mt-2">
+                        <span class="pedal">Pedal</span>
+                        <span class="office">Office</span>
+                    </h1>
+
+                </div>
+
+                <h2 class="h5 fw-bold mb-4">
+                    Entrar no sistema
+                </h2>
+
+                <!-- Formulário de login -->
+                 
+                {% if erro %}
+                <div class="alert alert-danger text-center" role="alert">
+                {{ erro }}
+                </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-semibold">
+                            Nome de usuário
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-control"
+                            placeholder="Digite seu usuário"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label fw-semibold">
+                            Senha
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-login w-100">
+                        Entrar
+                    </button>
+
+                </form>
+
+                <p class="text-center text-secondary small mt-4 mb-0">
+                    Acesso restrito aos funcionários autorizados.
+                </p>
+
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
