@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtos | Pedal Office</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+            color: #222;
+        }
+
+        .app {
+            max-width: 660px;
+            min-height: 100vh;
+            margin: auto;
+            background: white;
+            border: 1px solid #e5e5e5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cabecalho {
+            padding: 16px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cabecalho h1 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .total {
+            font-size: 12px;
+            color: #555;
+        }
+
+        main {
+            padding: 14px;
+            flex: 1;
+        }
+
+        
+.btn-adicionar {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 7px;
+    background: #df382c;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .btn-adicionar:hover {
+    background: #c92f25;
+}
+
+        .busca {
+            position: relative;
+            margin-top: 12px;
+        }
+
+        .busca i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .busca input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 12px 0;
+        }
+
+        .filtro {
+            white-space: nowrap;
+            padding: 7px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .filtro.ativo {
+            background: #f59a23;
+            color: white;
+            border-color: #f59a23;
+        }
+
+        .lista {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .produto {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .produto:last-child {
+            border-bottom: none;
+        }
+
+        .imagem {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .imagem img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .detalhes {
+            flex: 1;
+            min-width: 0;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .detalhes strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .promocao {
+            color: #ed8420;
+        }
+
+        .baixo {
+            color: #d32f2f;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .acoes a {
+            color: #444;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .vazio {
+            padding: 35px 15px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #e5e5e5;
+            padding: 12px 4px;
+            background: white;
+        }
+
+        .menu a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: #444;
+            font-size: 11px;
+        }
+
+        .menu i {
+            font-size: 20px;
+        }
+
+        .menu .selecionado {
+            color: #df382c;
+            font-weight: bold;
+        }
+
+        @media (min-width: 700px) {
+            .app {
+                margin-top: 14px;
+                margin-bottom: 14px;
+                min-height: calc(100vh - 28px);
+                border-radius: 16px;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <header class="cabecalho">
+        <h1>Produtos</h1>
+        <span class="total">{{ total_produtos }} cadastrados</span>
+    </header>
+
+    <main>
+
+        
+<a href="{% url 'novo_produto' %}" class="btn-adicionar">
+    <i class="bi bi-plus-lg"></i>
+    Adicionar produto
+    </a>
+
+
+        <form method="get" action="{% url 'produtos' %}" class="busca">
+            <i class="bi bi-search"></i>
+            <input
+                type="search"
+                name="busca"
+                placeholder="Buscar produto"
+                value="{{ busca }}"
+                aria-label="Buscar produto"
+            >
+            {% if categoria_atual != 'todos' %}
+                <input type="hidden" name="categoria"
+                       value="{{ categoria_atual }}">
+            {% endif %}
+        </form>
+
+        <nav class="filtros" aria-label="Filtrar produtos">
+            <a href="?categoria=todos"
+               class="filtro {% if categoria_atual == 'todos' %}ativo{% endif %}">
+                Todos
+            </a>
+
+            <a href="?categoria=bike_nova"
+               class="filtro {% if categoria_atual == 'bike_nova' %}ativo{% endif %}">
+                Bikes novas
+            </a>
+
+            <a href="?categoria=bike_usada"
+               class="filtro {% if categoria_atual == 'bike_usada' %}ativo{% endif %}">
+                Bikes usadas
+            </a>
+
+            <a href="?categoria=peca"
+               class="filtro {% if categoria_atual == 'peca' %}ativo{% endif %}">
+                Peças
+            </a>
+
+            <a href="?categoria=acessorio"
+               class="filtro {% if categoria_atual == 'acessorio' %}ativo{% endif %}">
+                Acessórios
+            </a>
+        </nav>
+
+        <section class="lista">
+
+            {% for produto in produtos %}
+                <article class="produto">
+
+                    <div class="imagem">
+                        {% if produto.imagem %}
+                            <img src="{{ produto.imagem.url }}"
+                                 alt="{{ produto.nome }}">
+                        {% else %}
+                            <i class="bi bi-image"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="detalhes">
+                        <strong>{{ produto.nome }}</strong>
+
+                        <div>
+                            {{ produto.get_categoria_display }}
+                            ·R$ {{ produto.preco|floatformat:"2g" }}
+                            {% if produto.em_promocao %}
+                                <span class="promocao">· Promoção</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="{% if produto.quantidade <= produto.estoque_minimo %}baixo{% endif %}">
+                            Estoque: {{ produto.quantidade }} un.
+                            {% if produto.quantidade <= produto.estoque_minimo %}
+                                · Estoque baixo
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="acoes">
+                        <a href="{% url 'editar_produto' produto.id %}"
+                           title="Editar produto">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+
+                        <a href="{% url 'admin:core_produto_delete' produto.id %}"
+                           title="Excluir produto">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+
+                </article>
+            {% empty %}
+                <div class="vazio">
+                    <i class="bi bi-box-seam"></i>
+                    <p>Nenhum produto encontrado.</p>
+                </div>
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+    <nav class="menu">
+        <a href="{% url 'dashboard' %}">
+            <i class="bi bi-house-door"></i>
+            Início
+        </a>
+
+        <a href="{% url 'produtos' %}" class="selecionado">
+            <i class="bi bi-bicycle"></i>
+            Produtos
+        </a>
+
+        <a href="#" aria-disabled="true" title="Em desenvolvimento">
+            <i class="bi bi-box-seam"></i>
+            Estoque
+        </a>
+
+        <a href="#" aria-disabled="true" title="Em desenvolvimento">
+            <i class="bi bi-cart3"></i>
+            Vendas
+        </a>
+
+        <a href="#" aria-disabled="true" title="Em desenvolvimento">
+            <i class="bi bi-list"></i>
+            Mais
+        </a>
+    </nav>
+
+</div>
+</body>
+</html>

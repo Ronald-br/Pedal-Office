@@ -21,3 +21,6 @@ __pycache__/
 
 # Arquivos temporários
 *.log
+
+# Imagens enviadas pelos usuários
+media/

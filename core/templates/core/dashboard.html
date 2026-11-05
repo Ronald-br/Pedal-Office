@@ -1,0 +1,524 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Painel Administrativo | Pedal Office</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --vermelho: #df382b;
+            --vermelho-escuro: #c92f25;
+            --laranja: #f59e0b;
+            --laranja-escuro: #ea8a00;
+            --texto: #222222;
+            --cinza: #f8f8f8;
+            --borda: #e6e6e6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f4f6;
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .painel {
+            width: 100%;
+            max-width: 680px;
+            margin: 16px auto;
+            background: white;
+            border: 1px solid var(--borda);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Cabeçalho */
+
+        .cabecalho {
+            background: var(--vermelho);
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            color: white;
+        }
+
+        .identificacao {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 11px;
+            background: white;
+            color: var(--vermelho);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 27px;
+            flex-shrink: 0;
+        }
+
+        .saudacao {
+            font-size: 12px;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .nome-loja {
+            font-size: 19px;
+            font-weight: 700;
+            margin: 1px 0 0;
+        }
+
+        .perfil {
+            width: 37px;
+            height: 37px;
+            border: none;
+            border-radius: 50%;
+            background: var(--laranja);
+            color: white;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Conteúdo */
+
+        .conteudo {
+            padding: 16px;
+        }
+
+        .acoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .acao {
+            min-height: 43px;
+            border-radius: 7px;
+            padding: 10px 8px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .acao-venda {
+            background: var(--vermelho);
+            color: white;
+            border: 1px solid var(--vermelho);
+        }
+
+        .acao-estoque {
+            background: white;
+            color: var(--laranja-escuro);
+            border: 1px solid var(--laranja-escuro);
+        }
+
+        .acao:disabled {
+            opacity: 1;
+            cursor: not-allowed;
+        }
+
+        /* Indicadores */
+
+        .indicadores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .indicador {
+            background: #fbfbfb;
+            border-radius: 10px;
+            padding: 13px 12px;
+            min-height: 69px;
+        }
+
+        .indicador-destaque {
+            border-left: 3px solid var(--vermelho);
+        }
+
+        .indicador-titulo {
+            margin: 0 0 5px;
+            font-size: 12px;
+            color: #444;
+        }
+
+        .indicador-numero {
+            margin: 0;
+            font-size: 21px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .indicador-destaque .indicador-numero {
+            color: var(--vermelho);
+        }
+
+        /* Listas */
+
+        .secao {
+            margin-top: 18px;
+        }
+
+        .secao-titulo {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0 0 9px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .secao-titulo i {
+            color: var(--laranja-escuro);
+            font-size: 17px;
+        }
+
+        .lista {
+            border: 1px solid var(--borda);
+            border-radius: 9px;
+            overflow: hidden;
+        }
+
+        .lista-item {
+            padding: 11px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 13px;
+            min-height: 40px;
+        }
+
+        .lista-item + .lista-item {
+            border-top: 1px solid var(--borda);
+        }
+
+        .quantidade-baixa {
+            color: var(--vermelho);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .quantidade-vendas {
+            color: #555;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .lista-vazia {
+            color: #777;
+            text-align: center;
+            padding: 17px 10px;
+            font-size: 13px;
+        }
+
+        /* Menu inferior */
+
+        .menu-inferior {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            border-top: 1px solid var(--borda);
+            background: white;
+        }
+
+        .menu-item {
+            min-height: 64px;
+            padding: 9px 4px;
+            border: none;
+            background: white;
+            color: #444;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .menu-item i {
+            font-size: 21px;
+        }
+
+        .menu-item.ativo {
+            color: var(--vermelho);
+        }
+
+        .menu-item:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                background: white;
+            }
+
+            .painel {
+                margin: 0;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                max-width: none;
+            }
+
+            .cabecalho {
+                padding: 12px;
+            }
+
+            .conteudo {
+                padding: 13px;
+            }
+
+            .nome-loja {
+                font-size: 16px;
+            }
+
+            .logo {
+                width: 42px;
+                height: 42px;
+            }
+
+            .acao {
+                font-size: 11px;
+                gap: 5px;
+            }
+
+            .indicador {
+                padding: 12px 10px;
+            }
+
+            .menu-item {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="painel">
+
+        <!-- CABEÇALHO -->
+        <header class="cabecalho">
+
+            <div class="identificacao">
+                <div class="logo">
+                    <i class="bi bi-bicycle"></i>
+                </div>
+
+                <div>
+                    <p class="saudacao">Olá!</p>
+                    <h1 class="nome-loja">Casa das Bicicletas</h1>
+                </div>
+            </div>
+
+            <button
+                class="perfil"
+                type="button"
+                title="Perfil em desenvolvimento"
+                aria-label="Perfil em desenvolvimento"
+                disabled
+            >
+                <i class="bi bi-person"></i>
+            </button>
+
+        </header>
+
+        <main class="conteudo">
+
+            <!-- BOTÕES PRINCIPAIS -->
+            <div class="acoes">
+
+                <button
+                    class="acao acao-venda"
+                    type="button"
+                    title="Registro de vendas em desenvolvimento"
+                    disabled
+                >
+                    <i class="bi bi-cart3"></i>
+                    Registrar venda
+                </button>
+
+                <button
+                    class="acao acao-estoque"
+                    type="button"
+                    title="Entrada de estoque em desenvolvimento"
+                    disabled
+                >
+                    <i class="bi bi-box-seam"></i>
+                    Entrada de estoque
+                </button>
+
+            </div>
+
+            <!-- INDICADORES -->
+            <section class="indicadores">
+
+                <div class="indicador">
+                    <p class="indicador-titulo">Vendas no mês</p>
+                    <p class="indicador-numero">
+                        {{ vendas_mes|default:0 }}
+                    </p>
+                </div>
+
+                <div class="indicador">
+                    <p class="indicador-titulo">Bikes em estoque</p>
+                    <p class="indicador-numero">
+                        {{ bikes_estoque|default:0 }}
+                    </p>
+                </div>
+
+                <div class="indicador">
+                    <p class="indicador-titulo">Produtos cadastrados</p>
+                    <p class="indicador-numero">
+                        {{ produtos_cadastrados|default:0 }}
+                    </p>
+                </div>
+
+                <div class="indicador indicador-destaque">
+                    <p class="indicador-titulo">Estoque baixo</p>
+                    <p class="indicador-numero">
+                        {{ total_estoque_baixo|default:0 }}
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- PRODUTOS COM ESTOQUE BAIXO -->
+            <section class="secao">
+
+                <h2 class="secao-titulo">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Acabando no estoque
+                </h2>
+
+                <div class="lista">
+
+                    {% for produto in produtos_estoque_baixo %}
+
+                        <div class="lista-item">
+                            <span>{{ produto.nome }}</span>
+                            <span class="quantidade-baixa">
+                                {{ produto.quantidade }} un.
+                            </span>
+                        </div>
+
+                    {% empty %}
+
+                        <div class="lista-vazia">
+                            Nenhum produto com estoque baixo.
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            <!-- MAIS VENDIDOS -->
+            <section class="secao">
+
+                <h2 class="secao-titulo">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    Mais vendidos do mês
+                </h2>
+
+                <div class="lista">
+
+                    {% for produto in produtos_mais_vendidos %}
+
+                        <div class="lista-item">
+                            <span>
+                                {{ forloop.counter }}.
+                                {{ produto.nome }}
+                            </span>
+
+                            <span class="quantidade-vendas">
+                                {{ produto.total_vendido }}
+                            </span>
+                        </div>
+
+                    {% empty %}
+
+                        <div class="lista-vazia">
+                            Nenhuma venda registrada ainda.
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- MENU INFERIOR -->
+        <nav class="menu-inferior" aria-label="Menu principal">
+
+            <a
+                class="menu-item ativo"
+                href="/dashboard/"
+                aria-current="page"
+            >
+                <i class="bi bi-house-door"></i>
+                <span>Início</span>
+            </a>
+
+            <button class="menu-item" type="button" disabled>
+                <i class="bi bi-bicycle"></i>
+                <span>Produtos</span>
+            </button>
+
+            <button class="menu-item" type="button" disabled>
+                <i class="bi bi-box-seam"></i>
+                <span>Estoque</span>
+            </button>
+
+            <button class="menu-item" type="button" disabled>
+                <i class="bi bi-cart3"></i>
+                <span>Vendas</span>
+            </button>
+
+            <button class="menu-item" type="button" disabled>
+                <i class="bi bi-list"></i>
+                <span>Mais</span>
+            </button>
+
+        </nav>
+
+    </div>
+
+</body>
+</html>
