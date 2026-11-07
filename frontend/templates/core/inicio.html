@@ -1,0 +1,622 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Casa das Bicicletas | Catálogo</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --vermelho: #e53935;
+            --vermelho-escuro: #c62828;
+            --laranja: #f97316;
+            --fundo: #f7f8fa;
+            --texto: #242424;
+        }
+
+        body {
+            background: var(--fundo);
+            font-family: Arial, sans-serif;
+            color: var(--texto);
+        }
+
+        /* CABEÇALHO */
+
+        .cabecalho {
+            background: #ffffff;
+            border-bottom: 3px solid var(--vermelho);
+        }
+
+        .marca {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #171717;
+            font-size: 1.35rem;
+            font-weight: 800;
+        }
+
+        .marca:hover {
+            color: #171717;
+        }
+
+        .marca-icone {
+            background: #fff0ed;
+            color: var(--vermelho);
+            border-radius: 12px;
+            padding: 8px 10px;
+            font-size: 1.45rem;
+        }
+
+        .btn-entrar {
+            display: inline-block;
+            border: 1px solid var(--vermelho);
+            color: var(--vermelho);
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 10px 16px;
+            white-space: nowrap;
+        }
+
+        .btn-entrar:hover {
+            background: var(--vermelho);
+            color: #ffffff;
+        }
+
+        /* BANNER DA LOJA */
+
+        .banner {
+            background: linear-gradient(
+                110deg,
+                var(--vermelho),
+                var(--laranja)
+            );
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+        }
+
+        .banner-conteudo {
+            background: rgba(255,255,255,0.97);
+            border-radius: 17px;
+            padding: 28px;
+        }
+
+        .logo-loja {
+            width: 140px;
+            height: 140px;
+            background: #fff4ef;
+            border: 2px dashed #f1b09c;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #777777;
+            margin: auto;
+            gap: 8px;
+        }
+
+        .logo-loja span {
+            font-size: 3rem;
+        }
+
+        .logo-loja small {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .slogan {
+            color: #171717;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .informacoes-loja {
+            color: #444444;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .informacoes-loja strong {
+            color: #222222;
+        }
+
+        /* CATÁLOGO */
+
+        .titulo-secao {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #171717;
+        }
+
+        .campo-busca {
+            border-radius: 12px;
+            padding: 13px 16px;
+            border: 1px solid #dddddd;
+        }
+
+        .campo-busca:focus {
+            border-color: var(--laranja);
+            box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+        }
+
+        .filtro {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 30px;
+            background: #ffffff;
+            color: #444444;
+            border: 1px solid #e4e4e4;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .filtro:hover,
+        .filtro.ativo {
+            background: var(--vermelho);
+            color: #ffffff;
+            border-color: var(--vermelho);
+        }
+
+        /* PRODUTOS */
+
+        .produto-card {
+            border: none;
+            border-radius: 18px;
+            overflow: hidden;
+            height: 100%;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+
+        .produto-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .produto-imagem {
+            width: 100%;
+            height: 210px;
+            object-fit: contain;
+            background: #ffffff;
+            padding: 15px;
+        }
+
+        .sem-imagem {
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff3ed;
+            font-size: 3rem;
+        }
+
+        .preco {
+            color: var(--vermelho);
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .preco-antigo {
+            color: #888888;
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+
+        .btn-whatsapp {
+            background: #168a4a;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 11px;
+            text-align: center;
+            font-weight: 700;
+            display: block;
+            width: 100%;
+        }
+
+        .btn-whatsapp:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        /* RODAPÉ */
+
+        .rodape {
+            background: #262626;
+            color: #dddddd;
+            padding: 24px 0;
+            margin-top: 60px;
+        }
+
+        .rodape strong {
+            color: #ffffff;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 576px) {
+            .marca {
+                font-size: 1rem;
+                gap: 7px;
+            }
+
+            .marca-icone {
+                font-size: 1.2rem;
+                padding: 7px;
+            }
+
+            .btn-entrar {
+                font-size: 0.75rem;
+                padding: 9px 10px;
+            }
+
+            .banner {
+                padding: 12px;
+            }
+
+            .banner-conteudo {
+                padding: 22px;
+            }
+
+            .slogan {
+                font-size: 1.4rem;
+                text-align: center;
+            }
+
+            .informacoes-loja {
+                text-align: center;
+            }
+
+            .titulo-secao {
+                font-size: 1.4rem;
+            }
+
+            .produto-imagem,
+            .sem-imagem {
+                height: 170px;
+            }
+
+            .filtro {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- CABEÇALHO -->
+
+<header class="cabecalho sticky-top">
+    <div class="container py-3 d-flex justify-content-between align-items-center gap-3">
+
+        <a href="{% url 'inicio' %}" class="marca">
+            <span class="marca-icone">🚲</span>
+            <span>Casa das Bicicletas</span>
+        </a>
+
+        <a href="{% url 'login' %}" class="btn-entrar">
+            Área administrativa
+        </a>
+
+    </div>
+</header>
+
+<main class="container pt-5 pb-4">
+
+    <!-- IDENTIFICAÇÃO DA LOJA -->
+
+    <section class="banner mb-5">
+        <div class="banner-conteudo">
+
+            <div class="row align-items-center g-4">
+
+                <div class="col-md-auto text-center">
+                  <div class="logo-loja">
+
+        {% if loja and loja.logo %}
+
+            <img
+            src="{{ loja.logo.url }}"
+            alt="Logo da {{ loja.nome }}"
+            style="width: 100%; height: 100%; object-fit: contain; border-radius: 16px;"
+            >
+
+        {% else %}
+
+            <span>🚲</span>
+            <small>Logo da loja</small>
+
+            {% endif %}
+
+            </div>
+                </div>
+
+                <div class="col-md">
+
+                    <h1 class="slogan">
+                        Bicicletas, peças e acessórios
+                    </h1>
+
+                <div class="informacoes-loja">
+
+    <p class="mb-2">
+        📍 <strong>Endereço:</strong>
+        {{ loja.endereco|default:"A cadastrar" }}
+    </p>
+
+    <p class="mb-0">
+        🕒 <strong>Funcionamento:</strong>
+        {{ loja.horario_funcionamento|default:"A cadastrar" }}
+    </p>
+
+    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+
+    <section id="catalogo">
+
+        <div class="mb-4">
+            <h2 class="titulo-secao">
+                Catálogo de produtos
+            </h2>
+        </div>
+
+        <!-- BUSCA -->
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-8">
+
+                <input
+                    type="search"
+                    id="buscaProduto"
+                    class="form-control campo-busca"
+                    placeholder="Buscar bicicletas, peças ou acessórios..."
+                    aria-label="Buscar produtos"
+                >
+
+            </div>
+        </div>
+
+        <!-- FILTROS -->
+
+        <div class="d-flex flex-wrap gap-2 mb-4" id="filtros">
+
+            <button
+                type="button"
+                class="filtro ativo"
+                data-categoria="todos"
+            >
+                Todos
+            </button>
+
+            <button
+                type="button"
+                class="filtro"
+                data-categoria="bike_nova"
+            >
+                Bicicletas novas
+            </button>
+
+            <button
+                type="button"
+                class="filtro"
+                data-categoria="bike_usada"
+            >
+                Bicicletas usadas
+            </button>
+
+            <button
+                type="button"
+                class="filtro"
+                data-categoria="peca"
+            >
+                Peças
+            </button>
+
+            <button
+                type="button"
+                class="filtro"
+                data-categoria="acessorio"
+            >
+                Acessórios
+            </button>
+
+        </div>
+
+        <!-- LISTA DE PRODUTOS -->
+
+        <div class="row g-4" id="listaProdutos">
+
+            {% for produto in produtos %}
+
+            <div
+                class="col-12 col-sm-6 col-lg-4 col-xl-3 item-produto"
+                data-nome="{{ produto.nome|lower }}"
+                data-categoria="{{ produto.categoria }}"
+            >
+
+                <article class="card produto-card">
+
+                    {% if produto.imagem %}
+
+                        <img
+                            src="{{ produto.imagem.url }}"
+                            alt="{{ produto.nome }}"
+                            class="produto-imagem"
+                        >
+
+                    {% else %}
+
+                        <div class="sem-imagem">
+                            🚲
+                        </div>
+
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+
+                        <span class="text-secondary small mb-2">
+                            {{ produto.get_categoria_display }}
+                        </span>
+
+                        <h3 class="h6 fw-bold">
+                            {{ produto.nome }}
+                        </h3>
+
+                        {% if produto.em_promocao and produto.preco_promocional %}
+
+                            <div class="preco-antigo">
+                                R$ {{ produto.preco|floatformat:"2g" }}
+                            </div>
+
+                            <div class="preco mb-3">
+                                R$ {{ produto.preco_promocional|floatformat:"2g" }}
+                            </div>
+
+                        {% else %}
+
+                            <div class="preco mb-3">
+                                R$ {{ produto.preco|floatformat:"2g" }}
+                            </div>
+
+                        {% endif %}
+
+                        {% if produto.quantidade > 0 %}
+
+                            <span class="badge text-bg-success align-self-start mb-3">
+                                Disponível
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge text-bg-secondary align-self-start mb-3">
+                                Indisponível
+                            </span>
+
+                        {% endif %}
+
+                        <button
+                            type="button"
+                            class="btn-whatsapp mt-auto"
+                            disabled
+                            title="Contato em configuração"
+                        >
+                            Conversar no WhatsApp
+                        </button>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+            {% empty %}
+
+                <div class="col-12 text-center py-5">
+                    <h3 class="h5">
+                        Nenhum produto disponível no momento.
+                    </h3>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <p
+            id="semResultados"
+            class="text-center text-secondary py-4 d-none"
+        >
+            Nenhum produto encontrado para essa busca.
+        </p>
+
+    </section>
+
+</main>
+
+<!-- RODAPÉ -->
+
+<footer class="rodape text-center">
+    <div class="container">
+
+        <small>
+            Catálogo desenvolvido com
+            <strong>Pedal Office</strong>
+        </small>
+
+    </div>
+</footer>
+
+<!-- BUSCA E FILTROS -->
+
+<script>
+    const busca = document.getElementById("buscaProduto");
+    const filtros = document.querySelectorAll(".filtro");
+    const produtos = document.querySelectorAll(".item-produto");
+    const semResultados = document.getElementById("semResultados");
+
+    let categoriaAtual = "todos";
+
+    function filtrarProdutos() {
+        const termo = busca.value.toLocaleLowerCase("pt-BR").trim();
+        let encontrados = 0;
+
+        produtos.forEach(produto => {
+            const nome = produto.dataset.nome;
+            const categoria = produto.dataset.categoria;
+
+            const correspondeNome = nome.includes(termo);
+            const correspondeCategoria =
+                categoriaAtual === "todos" ||
+                categoria === categoriaAtual;
+
+            const mostrar = correspondeNome && correspondeCategoria;
+
+            produto.classList.toggle("d-none", !mostrar);
+
+            if (mostrar) {
+                encontrados++;
+            }
+        });
+
+        semResultados.classList.toggle(
+            "d-none",
+            encontrados > 0 || produtos.length === 0
+        );
+    }
+
+    busca.addEventListener("input", filtrarProdutos);
+
+    filtros.forEach(botao => {
+        botao.addEventListener("click", () => {
+            filtros.forEach(f => f.classList.remove("ativo"));
+            botao.classList.add("ativo");
+
+            categoriaAtual = botao.dataset.categoria;
+            filtrarProdutos();
+        });
+    });
+</script>
+
+</body>
+</html>

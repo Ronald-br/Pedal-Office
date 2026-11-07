@@ -5,12 +5,23 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 
-from .models import Produto
+from .models import Produto,Loja
 from .forms import ProdutoForm
 
 
+
 def inicio(request):
-    return render(request, 'core/inicio.html')
+    lista_produtos = Produto.objects.filter(ativo=True).order_by('-id')
+
+    loja = Loja.objects.filter(ativa=True).first()
+
+    contexto = {
+        'produtos': lista_produtos,
+        'loja': loja,
+    }
+
+    return render(request, 'core/inicio.html', contexto)
+
 
 
 def login_view(request):

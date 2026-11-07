@@ -60,3 +60,38 @@ class Produto(models.Model):
         ordering = ['nome']
         verbose_name = 'Produto'
         verbose_name_plural = 'Produtos'
+
+
+
+class Loja(models.Model):
+    nome = models.CharField(max_length=150)
+
+    logo = models.ImageField(
+        upload_to='lojas/',
+        blank=True,
+        null=True
+    )
+
+    endereco = models.CharField(
+        max_length=255,
+        blank=True
+    )
+
+    horario_funcionamento = models.CharField(
+        max_length=200,
+        blank=True
+    )
+
+    whatsapp = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    ativa = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nome
+
+    class Meta:
+        verbose_name = 'Loja'
+        verbose_name_plural = 'Lojas'
