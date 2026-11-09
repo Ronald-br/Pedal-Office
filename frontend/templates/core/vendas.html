@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendas | Casa das Bicicletas</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #20242a;
+        }
+
+        /* Cabeçalho */
+        header {
+            background: #c62828;
+            color: white;
+            padding: 22px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        header a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff8f2;
+            color: #a91e1e;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 13px 20px;
+            border: 2px solid white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        header a:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        header a:focus-visible {
+            outline: 3px solid white;
+            outline-offset: 3px;
+        }
+
+        /* Conteúdo principal */
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 18px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 3px 14px #00000010;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        /* Formulário */
+        label {
+            display: block;
+            margin: 15px 0 6px;
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 16px;
+            background: white;
+        }
+
+        select:focus,
+        input:focus {
+            outline: 2px solid #c62828;
+            outline-offset: 1px;
+        }
+
+        /* Aparência do campo desativado */
+        select:disabled {
+            background: #f0f0f0;
+            color: #777;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
+        .ajuda-pagamento {
+            margin: 7px 0 0;
+            font-size: 13px;
+            color: #777;
+        }
+
+        button {
+            background: #c62828;
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            padding: 13px 22px;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #a91e1e;
+        }
+
+        /* Mensagens e erros */
+        .mensagem {
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 14px;
+            background: #e8f5e9;
+        }
+
+        .erros,
+        .errorlist {
+            color: #b71c1c;
+            margin-top: 8px;
+        }
+
+        /* Funcionário responsável */
+        .funcionario-info {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0;
+            padding: 15px 18px;
+            background: #fff5f5;
+            border-left: 4px solid #c62828;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .funcionario-info strong {
+            color: #a91e1e;
+        }
+
+        /* Resumo automático da venda */
+        .resumo-venda {
+            margin: 22px 0;
+            padding: 20px;
+            background: #fff8f7;
+            border: 1px solid #f1d1cd;
+            border-radius: 12px;
+        }
+
+        .resumo-venda h3 {
+            margin: 0 0 16px;
+            color: #a91e1e;
+            font-size: 19px;
+        }
+
+        .resumo-linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eedbd8;
+        }
+
+        .resumo-linha:last-child {
+            border-bottom: none;
+        }
+
+        .resumo-total {
+            color: #a91e1e;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .aviso-estoque {
+            margin: 12px 0 0;
+            color: #b71c1c;
+            font-weight: bold;
+        }
+
+        /* Histórico de vendas */
+        .tabela {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        th {
+            background: #f3f3f3;
+        }
+
+        /* Tablets */
+        @media (max-width: 900px) {
+            header {
+                padding: 20px 4%;
+            }
+
+            header h1 {
+                font-size: 26px;
+            }
+        }
+
+        /* Celulares */
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: center;
+                gap: 14px;
+                padding: 20px 16px;
+            }
+
+            header h1 {
+                font-size: 23px;
+                line-height: 1.3;
+                text-align: center;
+                overflow-wrap: break-word;
+            }
+
+            header a {
+                align-self: flex-end;
+                font-size: 13px;
+                padding: 11px 15px;
+                max-width: 100%;
+            }
+
+            main {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .funcionario-info {
+                flex-direction: column;
+                align-items: flex-start;
+                font-size: 14px;
+            }
+
+            .resumo-venda {
+                padding: 15px;
+            }
+
+            .resumo-linha {
+                flex-wrap: wrap;
+            }
+
+            .resumo-total {
+                font-size: 17px;
+            }
+        }
+
+        /* Celulares muito estreitos */
+        @media (max-width: 360px) {
+            header h1 {
+                font-size: 20px;
+            }
+
+            header a {
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Casa das Bicicletas</h1>
+
+        <a href="{% url 'dashboard' %}">
+            &larr; Voltar ao painel
+        </a>
+    </header>
+
+    <main>
+
+        <!-- REGISTRAR VENDA -->
+        <section class="card">
+            <h2>Registrar venda</h2>
+
+            <p>
+                Preencha os dados da venda para atualizar o estoque.
+            </p>
+
+            <div class="funcionario-info">
+                <strong>Funcionário responsável:</strong>
+                <span>
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </span>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mensagem">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                {{ formulario.produto.label_tag }}
+                {{ formulario.produto }}
+                {{ formulario.produto.errors }}
+
+                {{ formulario.quantidade.label_tag }}
+                {{ formulario.quantidade }}
+                {{ formulario.quantidade.errors }}
+
+                <!-- RESUMO AUTOMÁTICO -->
+                <div class="resumo-venda">
+                    <h3>Resumo da venda</h3>
+
+                    <div class="resumo-linha">
+                        <span>Preço unitário:</span>
+                        <strong id="preco-unitario">R$ 0,00</strong>
+                    </div>
+
+                    <div class="resumo-linha">
+                        <span>Estoque disponível:</span>
+                        <strong id="estoque-disponivel">—</strong>
+                    </div>
+
+                    <div class="resumo-linha resumo-total">
+                        <span>Total da venda:</span>
+                        <strong id="total-venda">R$ 0,00</strong>
+                    </div>
+
+                    <p
+                        id="aviso-estoque"
+                        class="aviso-estoque"
+                        hidden
+                        role="alert"
+                    >
+                        Quantidade maior que o estoque disponível.
+                    </p>
+                </div>
+
+                {{ formulario.nome_cliente.label_tag }}
+                {{ formulario.nome_cliente }}
+                {{ formulario.nome_cliente.errors }}
+
+                {{ formulario.forma_pagamento.label_tag }}
+                {{ formulario.forma_pagamento }}
+                {{ formulario.forma_pagamento.errors }}
+
+                <!-- Aviso mostrado apenas quando a venda é fiada -->
+                <p
+                    id="ajuda-pagamento"
+                    class="ajuda-pagamento"
+                    hidden
+                >
+                    A forma de pagamento será informada quando o cliente quitar o fiado.
+                </p>
+
+                {{ formulario.situacao_pagamento.label_tag }}
+                {{ formulario.situacao_pagamento }}
+                {{ formulario.situacao_pagamento.errors }}
+
+                {% if formulario.non_field_errors %}
+                    <div class="erros">
+                        {{ formulario.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <button type="submit">
+                    Confirmar venda
+                </button>
+            </form>
+        </section>
+
+        <!-- ÚLTIMAS VENDAS -->
+        <section class="card">
+            <h2>Últimas vendas</h2>
+
+            <div class="tabela">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Preço unitário</th>
+                            <th>Total</th>
+                            <th>Funcionário</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for venda in historico %}
+                            <tr>
+                                <td>
+                                    {{ venda.data_venda|date:"d/m/Y H:i" }}
+                                </td>
+
+                                <td>
+                                    {{ venda.produto.nome }}
+                                </td>
+
+                                <td>
+                                    {{ venda.quantidade }}
+                                </td>
+
+                                <td>
+                                    R$ {{ venda.preco_unitario|floatformat:2 }}
+                                </td>
+
+                                <td>
+                                    R$ {{ venda.total|floatformat:2 }}
+                                </td>
+
+                                <td>
+                                    {{ venda.funcionario.username }}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6">
+                                    Nenhuma venda registrada até o momento.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- DADOS ENVIADOS PELO DJANGO -->
+    {{ precos_produtos|json_script:"dados-precos-produtos" }}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const elementoDados = document.getElementById(
+                "dados-precos-produtos"
+            );
+
+            const produtos = JSON.parse(
+                elementoDados.textContent
+            );
+
+            const campoProduto = document.getElementById(
+                "id_produto"
+            );
+
+            const campoQuantidade = document.getElementById(
+                "id_quantidade"
+            );
+
+            const precoElemento = document.getElementById(
+                "preco-unitario"
+            );
+
+            const estoqueElemento = document.getElementById(
+                "estoque-disponivel"
+            );
+
+            const totalElemento = document.getElementById(
+                "total-venda"
+            );
+
+            const avisoEstoque = document.getElementById(
+                "aviso-estoque"
+            );
+
+            const moeda = new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+
+            // RESUMO AUTOMÁTICO DA VENDA
+            function atualizarResumo() {
+                const produto = produtos[campoProduto.value];
+
+                const quantidade = Number(
+                    campoQuantidade.value
+                );
+
+                if (!produto) {
+                    precoElemento.textContent = moeda.format(0);
+                    estoqueElemento.textContent = "—";
+                    totalElemento.textContent = moeda.format(0);
+                    avisoEstoque.hidden = true;
+                    return;
+                }
+
+                const preco = Number(produto.preco);
+                const estoque = Number(produto.estoque);
+
+                precoElemento.textContent = moeda.format(preco);
+                estoqueElemento.textContent = estoque;
+
+                const quantidadeValida =
+                    Number.isInteger(quantidade) &&
+                    quantidade > 0;
+
+                if (quantidadeValida) {
+                    totalElemento.textContent = moeda.format(
+                        preco * quantidade
+                    );
+                } else {
+                    totalElemento.textContent = moeda.format(0);
+                }
+
+                avisoEstoque.hidden = !(
+                    quantidadeValida &&
+                    quantidade > estoque
+                );
+            }
+
+            campoProduto.addEventListener(
+                "change",
+                atualizarResumo
+            );
+
+            campoQuantidade.addEventListener(
+                "input",
+                atualizarResumo
+            );
+
+            // COMPORTAMENTO DA FORMA DE PAGAMENTO
+            const campoSituacao = document.getElementById(
+                "id_situacao_pagamento"
+            );
+
+            const campoFormaPagamento = document.getElementById(
+                "id_forma_pagamento"
+            );
+
+            const ajudaPagamento = document.getElementById(
+                "ajuda-pagamento"
+            );
+
+            function atualizarFormaPagamento() {
+                const fiado = campoSituacao.value === "fiado";
+
+                if (fiado) {
+                    // Limpa a forma de pagamento anterior
+                    campoFormaPagamento.value = "";
+
+                    // Desativa o campo para vendas fiadas
+                    campoFormaPagamento.disabled = true;
+                    campoFormaPagamento.required = false;
+
+                    // Explica por que o campo está desativado
+                    ajudaPagamento.hidden = false;
+                } else {
+                    // Reativa o campo para vendas pagas
+                    campoFormaPagamento.disabled = false;
+                    campoFormaPagamento.required = true;
+
+                    ajudaPagamento.hidden = true;
+                }
+            }
+
+            campoSituacao.addEventListener(
+                "change",
+                atualizarFormaPagamento
+            );
+
+            // Executa as duas verificações ao abrir a página
+            atualizarResumo();
+            atualizarFormaPagamento();
+
+        });
+    </script>
+
+</body>
+</html>

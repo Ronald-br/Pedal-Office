@@ -1,12 +1,17 @@
+from django.core.exceptions import ValidationError
 
+from .forms import VendaForm
+from .models import Venda
+from .services import registrar_venda, quitar_fiado
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 
-from .models import Produto,Loja
+from .models import Produto,Loja,Venda
 from .forms import ProdutoForm
+from django.views.decorators.http import require_POST
 
 
 
@@ -154,3 +159,125 @@ def editar_produto(request, produto_id):
             'modo_edicao': True,
         }
     )
+
+@login_required(login_url='login')
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+def vendas(request):
+    if request.method == 'POST':
+        formulario = VendaForm(request.POST)
+
+        if formulario.is_valid():
+            produto = formulario.cleaned_data['produto']
+            quantidade = formulario.cleaned_data['quantidade']
+
+            try:
+                registrar_venda(
+                    produto_id=produto.id,
+                    quantidade=quantidade,
+                    funcionario=request.user,
+                    nome_cliente=formulario.cleaned_data.get('nome_cliente'),
+                    forma_pagamento=formulario.cleaned_data.get('forma_pagamento'),
+                    situacao_pagamento=formulario.cleaned_data.get('situacao_pagamento'),
+                )
+
+                messages.success(
+                    request,
+                    'Venda registrada com sucesso! Estoque atualizado.'
+                )
+
+                return redirect('vendas')
+
+            except ValidationError as erro:
+                formulario.add_error(None, erro)
+
+    else:
+        formulario = VendaForm()
+
+    historico = Venda.objects.select_related(
+        'produto',
+        'funcionario'
+    ).order_by('-data_venda')[:20]
+
+    
+    produtos_disponiveis = Produto.objects.filter(
+        ativo=True,
+        quantidade__gt=0
+    ).order_by('nome')
+
+    precos_produtos = {
+        str(produto.id): {
+            'preco': str(
+                produto.preco_promocional
+                if produto.em_promocao
+                and produto.preco_promocional is not None
+                else produto.preco
+            ),
+            'estoque': produto.quantidade,
+        }
+        for produto in produtos_disponiveis
+    }
+
+    return render(
+        request,
+        'core/vendas.html',
+        {
+            'formulario': formulario,
+            'historico': historico,
+            'precos_produtos': precos_produtos,
+        }
+    )
+
+
+@login_required(login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
+def historico_vendas(request):
+    historico = (
+        Venda.objects
+        .select_related('produto', 'funcionario')
+        .order_by('-data_venda')
+    )
+
+    return render(
+        request,
+        'core/historico_vendas.html',
+        {
+            'historico': historico,
+        }
+    )
+
+
+@login_required(login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
+@require_POST
+def quitar_venda_fiada(request, venda_id):
+    forma_pagamento = request.POST.get(
+        'forma_pagamento', ''
+    )
+
+    try:
+        venda = quitar_fiado(
+            venda_id=venda_id,
+            forma_pagamento=forma_pagamento,
+            funcionario=request.user
+        )
+
+        messages.success(
+            request,
+            f'Fiado do cliente {venda.nome_cliente} '
+            'quitado com sucesso!'
+        )
+
+    except ValidationError as erro:
+        messages.error(
+            request,
+            ' '.join(erro.messages)
+        )
+
+    return redirect('historico_vendas')
+

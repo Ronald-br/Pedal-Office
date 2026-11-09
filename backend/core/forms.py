@@ -69,3 +69,69 @@ class ProdutoForm(forms.ModelForm):
             cleaned_data['preco_promocional'] = None
 
         return cleaned_data
+
+
+class VendaForm(forms.Form):
+    produto = forms.ModelChoiceField(
+        queryset=Produto.objects.none(),
+        label='Produto',
+        empty_label='Selecione um produto'
+    )
+
+    quantidade = forms.IntegerField(
+        label='Quantidade vendida',
+        min_value=1,
+        initial=1
+    )
+
+    nome_cliente = forms.CharField(
+        label='Nome do cliente',
+        max_length=150,
+        required=True
+    )
+
+    forma_pagamento = forms.ChoiceField(
+        label='Forma de pagamento',
+        choices=[
+            ('', 'Selecione a forma de pagamento'),
+            ('dinheiro', 'Dinheiro'),
+            ('pix', 'Pix'),
+            ('debito', 'Cartão de débito'),
+            ('credito', 'Cartão de crédito'),
+            ('outro', 'Outro'),
+        ],
+        required=False
+    )
+
+    situacao_pagamento = forms.ChoiceField(
+        label='Situação do pagamento',
+        choices=[
+            ('pago', 'Pago'),
+            ('fiado', 'Fiado'),
+        ]
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['produto'].queryset = (
+            Produto.objects.filter(
+                ativo=True,
+                quantidade__gt=0
+            ).order_by('nome')
+        )
+
+    def clean(self):
+        dados = super().clean()
+
+        if (
+            dados.get('situacao_pagamento') == 'pago'
+            and not dados.get('forma_pagamento')
+        ):
+            self.add_error(
+                'forma_pagamento',
+                'Informe como o cliente pagou.'
+            )
+
+        return dados
+

@@ -1,0 +1,693 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Histórico de Vendas | Casa das Bicicletas</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #20242a;
+        }
+
+        /* CABEÇALHO */
+
+        header {
+            background: #c62828;
+            color: white;
+            padding: 22px 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .voltar {
+            display: inline-block;
+            padding: 12px 18px;
+            background: white;
+            color: #a91e1e;
+            border-radius: 9px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .voltar:hover {
+            background: #f5f5f5;
+        }
+
+        /* CONTEÚDO */
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 18px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 3px 14px #00000010;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .descricao {
+            color: #606770;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* TABELA PARA COMPUTADOR */
+
+        .tabela {
+            overflow-x: auto;
+            margin-top: 22px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1200px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e7e7e7;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #f4f4f4;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        /* SITUAÇÃO DO PAGAMENTO */
+
+        .situacao {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pago {
+            background: #e8f5e9;
+            color: #206b32;
+        }
+
+        .fiado {
+            background: #fff0df;
+            color: #9b5100;
+        }
+
+        /* FORMULÁRIO DE QUITAÇÃO */
+
+        .form-quitar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-quitar select {
+            padding: 9px;
+            border: 1px solid #cbd0d6;
+            border-radius: 7px;
+            background: white;
+            font-size: 13px;
+            min-width: 140px;
+            max-width: 100%;
+        }
+
+        .botao-quitar {
+            background: #238344;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 13px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .botao-quitar:hover {
+            background: #196732;
+        }
+
+        .botao-quitar:focus-visible,
+        .form-quitar select:focus-visible,
+        .voltar:focus-visible {
+            outline: 3px solid #1976d2;
+            outline-offset: 3px;
+        }
+
+        .sem-acao {
+            color: #888;
+            font-size: 13px;
+        }
+
+        /* MENSAGENS DE SUCESSO E ERRO */
+
+        .alerta {
+            padding: 14px 18px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .alerta.success {
+            background: #e8f5e9;
+            color: #206b32;
+            border: 1px solid #b9dfc1;
+        }
+
+        .alerta.error {
+            background: #ffebee;
+            color: #a91e1e;
+            border: 1px solid #f1b9c0;
+        }
+
+        .sem-registros {
+            padding: 25px;
+            text-align: center;
+            color: #666;
+        }
+
+        /* RESPONSIVIDADE PARA CELULARES */
+
+        @media (max-width: 700px) {
+
+            body {
+                font-size: 14px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 20px 16px;
+                gap: 16px;
+            }
+
+            header h1 {
+                font-size: 23px;
+                text-align: center;
+                line-height: 1.3;
+            }
+
+            .voltar {
+                align-self: center;
+                width: 100%;
+                max-width: 260px;
+                font-size: 13px;
+                padding: 12px 16px;
+            }
+
+            main {
+                margin: 18px auto;
+                padding: 0 12px;
+            }
+
+            .card {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+            h2 {
+                font-size: 21px;
+                margin-bottom: 12px;
+            }
+
+            .descricao {
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            .alerta {
+                font-size: 13px;
+                padding: 13px 14px;
+            }
+
+            /* REMOVE A ROLAGEM HORIZONTAL */
+
+            .tabela {
+                overflow-x: visible;
+                margin-top: 18px;
+            }
+
+            table {
+                min-width: 0;
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            /* ESCONDE O CABEÇALHO VISUAL DA TABELA */
+
+            thead {
+                display: none;
+            }
+
+            /* CADA VENDA VIRA UM CARTÃO */
+
+            tbody,
+            tr,
+            td {
+                display: block;
+                width: 100%;
+            }
+
+            tbody tr {
+                background: #ffffff;
+                border: 1px solid #e2e5e9;
+                border-radius: 10px;
+                margin-bottom: 16px;
+                padding: 10px;
+                box-shadow: 0 2px 8px #00000008;
+            }
+
+            tbody tr:hover {
+                background: #ffffff;
+            }
+
+            /* ORGANIZA AS INFORMAÇÕES DO CARTÃO */
+
+            td {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 11px 6px;
+                text-align: right;
+                border-bottom: 1px solid #eeeeee;
+                font-size: 13px;
+                line-height: 1.5;
+                overflow-wrap: anywhere;
+                word-break: normal;
+            }
+
+            /* RÓTULOS DAS INFORMAÇÕES */
+
+            td::before {
+                font-weight: bold;
+                color: #505862;
+                text-align: left;
+                flex: 0 0 42%;
+            }
+
+            td:nth-child(1)::before {
+                content: "Data";
+            }
+
+            td:nth-child(2)::before {
+                content: "Cliente";
+            }
+
+            td:nth-child(3)::before {
+                content: "Produto";
+            }
+
+            td:nth-child(4)::before {
+                content: "Quantidade";
+            }
+
+            td:nth-child(5)::before {
+                content: "Valor total";
+            }
+
+            td:nth-child(6)::before {
+                content: "Pagamento";
+            }
+
+            td:nth-child(7)::before {
+                content: "Situação";
+            }
+
+            td:nth-child(8)::before {
+                content: "Funcionário";
+            }
+
+            /* ÁREA DE AÇÕES */
+
+            td:nth-child(9) {
+                display: block;
+                padding: 14px 6px 6px;
+                border-bottom: none;
+                text-align: left;
+            }
+
+            td:nth-child(9)::before {
+                content: "Ações";
+                display: block;
+                margin-bottom: 12px;
+                font-size: 13px;
+            }
+
+            /* FORMULÁRIO NO CELULAR */
+
+            .form-quitar {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .form-quitar select {
+                width: 100%;
+                min-width: 0;
+                padding: 13px 12px;
+                font-size: 14px;
+                border-radius: 8px;
+            }
+
+            .botao-quitar {
+                width: 100%;
+                padding: 14px;
+                font-size: 14px;
+                border-radius: 8px;
+            }
+
+            .sem-acao {
+                display: inline-block;
+                padding: 9px 12px;
+                background: #e8f5e9;
+                color: #206b32;
+                border-radius: 7px;
+                font-weight: bold;
+            }
+
+            /* CASO NÃO EXISTAM VENDAS */
+
+            .sem-registros {
+                display: block;
+                padding: 22px 12px;
+                text-align: center;
+                border-bottom: none;
+            }
+
+            .sem-registros::before {
+                display: none;
+            }
+        }
+
+        /* AJUSTES PARA CELULARES MUITO PEQUENOS */
+
+        @media (max-width: 360px) {
+
+            header h1 {
+                font-size: 21px;
+            }
+
+            main {
+                padding: 0 8px;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            tbody tr {
+                padding: 8px;
+            }
+
+            td {
+                gap: 8px;
+                font-size: 12px;
+            }
+
+            td::before {
+                flex-basis: 40%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+
+    <header>
+        <h1>Casa das Bicicletas</h1>
+
+        <a class="voltar" href="{% url 'vendas' %}">
+            &larr; Voltar às vendas
+        </a>
+    </header>
+
+    <main>
+
+        <!-- MENSAGENS DO SISTEMA -->
+
+        {% if messages %}
+            {% for message in messages %}
+
+                <div
+                    class="alerta {{ message.tags }}"
+                    role="alert"
+                >
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+        {% endif %}
+
+        <!-- HISTÓRICO DE VENDAS -->
+
+        <section class="card">
+
+            <h2>Histórico de vendas</h2>
+
+            <p class="descricao">
+                Consulte as vendas registradas, os clientes,
+                os valores e a situação dos pagamentos.
+
+                Para quitar uma venda fiada, selecione a forma
+                de pagamento e confirme a operação.
+            </p>
+
+            <div class="tabela">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Data</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Produto</th>
+                            <th scope="col">Qtd.</th>
+                            <th scope="col">Valor total</th>
+                            <th scope="col">Pagamento</th>
+                            <th scope="col">Situação</th>
+                            <th scope="col">Funcionário</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for venda in historico %}
+
+                        <tr>
+
+                            <!-- DATA DA VENDA -->
+
+                            <td>
+                                {{ venda.data_venda|date:"d/m/Y H:i" }}
+                            </td>
+
+                            <!-- CLIENTE -->
+
+                            <td>
+                                {{ venda.nome_cliente|default:"Não informado" }}
+                            </td>
+
+                            <!-- PRODUTO -->
+
+                            <td>
+                                {{ venda.produto.nome }}
+                            </td>
+
+                            <!-- QUANTIDADE -->
+
+                            <td>
+                                {{ venda.quantidade }}
+                            </td>
+
+                            <!-- VALOR TOTAL -->
+
+                            <td>
+                                R$ {{ venda.total|floatformat:2 }}
+                            </td>
+
+                            <!-- FORMA DE PAGAMENTO -->
+
+                            <td>
+
+                                {% if venda.forma_pagamento %}
+
+                                    {{ venda.get_forma_pagamento_display }}
+
+                                {% else %}
+
+                                    &mdash;
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- SITUAÇÃO DO PAGAMENTO -->
+
+                            <td>
+
+                                {% if venda.situacao_pagamento == 'fiado' %}
+
+                                    <span class="situacao fiado">
+                                        Fiado
+                                    </span>
+
+                                {% elif venda.situacao_pagamento == 'pago' %}
+
+                                    <span class="situacao pago">
+                                        Pago
+                                    </span>
+
+                                {% else %}
+
+                                    {{ venda.get_situacao_pagamento_display }}
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- FUNCIONÁRIO -->
+
+                            <td>
+                                {{ venda.funcionario.username }}
+                            </td>
+
+                            <!-- AÇÕES -->
+
+                            <td>
+
+                                {% if venda.situacao_pagamento == 'fiado' %}
+
+                                    <form
+                                        class="form-quitar"
+                                        method="POST"
+                                        action="{% url 'quitar_venda_fiada' venda.id %}"
+                                        onsubmit="return confirm('Confirma que este fiado foi pago?');"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <select
+                                            name="forma_pagamento"
+                                            aria-label="Forma de pagamento para quitar fiado"
+                                            required
+                                        >
+
+                                            <option value="">
+                                                Selecione
+                                            </option>
+
+                                            <option value="dinheiro">
+                                                Dinheiro
+                                            </option>
+
+                                            <option value="pix">
+                                                Pix
+                                            </option>
+
+                                            <option value="debito">
+                                                Cartão de débito
+                                            </option>
+
+                                            <option value="credito">
+                                                Cartão de crédito
+                                            </option>
+
+                                            <option value="outro">
+                                                Outro
+                                            </option>
+
+                                        </select>
+
+                                        <button
+                                            type="submit"
+                                            class="botao-quitar"
+                                        >
+                                            Quitar fiado
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
+
+                                    <span class="sem-acao">
+                                        Quitado
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <!-- NENHUMA VENDA CADASTRADA -->
+
+                        <tr>
+                            <td
+                                colspan="9"
+                                class="sem-registros"
+                            >
+                                Nenhuma venda registrada até o momento.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
