@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Painel Administrativo | Pedal Office</title>
+    <title>Painel Administrativo | Casa das Bicicletas</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -14,13 +14,20 @@
 
     <style>
         :root {
-            --vermelho: #df382b;
-            --vermelho-escuro: #c92f25;
-            --laranja: #f59e0b;
-            --laranja-escuro: #ea8a00;
-            --texto: #222222;
-            --cinza: #f8f8f8;
-            --borda: #e6e6e6;
+            --vermelho: #dc352b;
+            --vermelho-escuro: #bd2922;
+            --laranja: #ed6b23;
+            --vinho: #842d49;
+            --preto: #222b37;
+            --amarelo: #e49b12;
+            --fundo: #f5f6f8;
+            --branco: #ffffff;
+            --texto: #202838;
+            --secundario: #697386;
+            --borda: #e7eaf0;
+            --menu: #172131;
+            --menu-hover: #273346;
+            --sombra: 0 5px 22px rgba(25, 35, 52, 0.045);
         }
 
         * {
@@ -29,298 +36,721 @@
 
         body {
             margin: 0;
-            background: #f3f4f6;
+            min-height: 100vh;
+            background: var(--fundo);
             color: var(--texto);
             font-family: Arial, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .painel {
-            width: 100%;
-            max-width: 680px;
-            margin: 16px auto;
-            background: white;
-            border: 1px solid var(--borda);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        /* Cabeçalho */
+        button {
+            font: inherit;
+        }
 
-        .cabecalho {
-            background: var(--vermelho);
-            padding: 14px 16px;
+        .app {
+            display: grid;
+            grid-template-columns: 252px minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        /* =====================================
+           MENU LATERAL - DESKTOP
+        ===================================== */
+
+        .sidebar {
+            position: sticky;
+            top: 0;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--menu);
+            color: white;
+            padding: 27px 15px 20px;
+        }
+
+        .marca {
+            display: flex;
             align-items: center;
             gap: 12px;
+            padding: 4px 9px 29px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .marca-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            background: var(--vermelho);
+            border-radius: 13px;
+            font-size: 25px;
+        }
+
+        .marca-nome {
+            margin: 0;
+            color: white;
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .menu-titulo {
+            padding: 27px 14px 10px;
+            color: #8997aa;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-height: 45px;
+            padding: 11px 14px;
+            border-radius: 9px;
+            color: #c4cbd7;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .menu-link i {
+            width: 19px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .menu-link:hover {
+            background: var(--menu-hover);
             color: white;
         }
 
-        .identificacao {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .menu-link.ativo {
+            background: var(--vermelho);
+            color: white;
+        }
+
+        .menu-link:focus-visible,
+        .cartao-link:focus-visible,
+        .mobile-link:focus-visible {
+            outline: 3px solid var(--laranja);
+            outline-offset: 3px;
+        }
+
+        /* =====================================
+           CABEÇALHO MOBILE
+        ===================================== */
+
+        .mobile-topo,
+        .mobile-navegacao {
+            display: none;
+        }
+
+        /* =====================================
+           CONTEÚDO PRINCIPAL
+        ===================================== */
+
+        .principal {
             min-width: 0;
         }
 
-        .logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 11px;
-            background: white;
-            color: var(--vermelho);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 27px;
-            flex-shrink: 0;
-        }
-
-        .saudacao {
-            font-size: 12px;
-            margin: 0;
-            font-weight: 500;
-        }
-
-        .nome-loja {
-            font-size: 19px;
-            font-weight: 700;
-            margin: 1px 0 0;
-        }
-
-        .perfil {
-            width: 37px;
-            height: 37px;
-            border: none;
-            border-radius: 50%;
-            background: var(--laranja);
-            color: white;
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        /* Conteúdo */
-
-        .conteudo {
-            padding: 16px;
-        }
-
-        .acoes {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .acao {
-            min-height: 43px;
-            border-radius: 7px;
-            padding: 10px 8px;
-            font-size: 13px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .acao-venda {
-            background: var(--vermelho);
-            color: white;
-            border: 1px solid var(--vermelho);
-        }
-
-        .acao-estoque {
-            background: white;
-            color: var(--laranja-escuro);
-            border: 1px solid var(--laranja-escuro);
-        }
-
-        .acao:disabled {
-            opacity: 1;
-            cursor: not-allowed;
-        }
-
-        /* Indicadores */
-
-        .indicadores {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .indicador {
-            background: #fbfbfb;
-            border-radius: 10px;
-            padding: 13px 12px;
-            min-height: 69px;
-        }
-
-        .indicador-destaque {
-            border-left: 3px solid var(--vermelho);
-        }
-
-        .indicador-titulo {
-            margin: 0 0 5px;
-            font-size: 12px;
-            color: #444;
-        }
-
-        .indicador-numero {
-            margin: 0;
-            font-size: 21px;
-            line-height: 1;
-            font-weight: 700;
-        }
-
-        .indicador-destaque .indicador-numero {
-            color: var(--vermelho);
-        }
-
-        /* Listas */
-
-        .secao {
-            margin-top: 18px;
-        }
-
-        .secao-titulo {
-            font-size: 14px;
-            font-weight: 700;
-            margin: 0 0 9px;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .secao-titulo i {
-            color: var(--laranja-escuro);
-            font-size: 17px;
-        }
-
-        .lista {
-            border: 1px solid var(--borda);
-            border-radius: 9px;
-            overflow: hidden;
-        }
-
-        .lista-item {
-            padding: 11px 12px;
+        .topo {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 20px;
+            min-height: 81px;
+            padding: 17px 35px;
+            background: var(--branco);
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .topo-contexto {
+            display: flex;
+            align-items: center;
+            gap: 9px;
             font-size: 13px;
-            min-height: 40px;
+            color: var(--secundario);
+        }
+
+        .topo-contexto i {
+            color: var(--vermelho);
+            font-size: 18px;
+        }
+
+        .topo-saudacao {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            color: var(--secundario);
+        }
+
+        .topo-saudacao strong {
+            color: var(--texto);
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .conteudo {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 34px 35px 48px;
+        }
+
+        /* =====================================
+           APRESENTAÇÃO
+        ===================================== */
+
+        .boas-vindas {
+            margin-bottom: 30px;
+        }
+
+        .etiqueta {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--vermelho);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .etiqueta i {
+            font-size: 7px;
+        }
+
+        h1 {
+            margin: 10px 0 9px;
+            font-size: clamp(24px, 2.5vw, 32px);
+            font-weight: 800;
+            letter-spacing: -0.8px;
+        }
+
+        .descricao {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* =====================================
+           INDICADORES
+        ===================================== */
+
+        .indicadores {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 29px;
+        }
+
+        .indicador {
+            min-width: 0;
+            padding: 22px;
+            background: white;
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            box-shadow: var(--sombra);
+        }
+
+        .indicador-superior {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 21px;
+        }
+
+        .indicador-icone {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            font-size: 19px;
+        }
+
+        /* Vendas: laranja */
+        .icone-laranja {
+            background: #fff1e5;
+            color: var(--laranja);
+        }
+
+        /* Produtos: preto-azulado */
+        .icone-preto {
+            background: #eff0f2;
+            color: var(--preto);
+        }
+
+        /* Bicicletas: vinho */
+        .icone-vinho {
+            background: #f8eaf0;
+            color: var(--vinho);
+        }
+
+        /* Estoque baixo: amarelo */
+        .icone-amarelo {
+            background: #fff5dc;
+            color: var(--amarelo);
+        }
+
+        .indicador-legenda {
+            color: #929eaf;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .indicador-numero {
+            margin: 0 0 7px;
+            font-size: 31px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            line-height: 1.1;
+        }
+
+        .indicador-nome {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .indicador-alerta .indicador-numero {
+            color: var(--vermelho);
+        }
+
+        /* =====================================
+           MONITORAMENTO
+        ===================================== */
+
+        .secao-titulo-geral {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 0 0 16px;
+        }
+
+        .secao-titulo-geral h2 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: -0.3px;
+        }
+
+        .secao-subtitulo {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 12px;
+        }
+
+        .paineis {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .cartao {
+            min-width: 0;
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            box-shadow: var(--sombra);
+        }
+
+        .cartao-cabecalho {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 21px 22px;
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .cartao-identificacao {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .cartao-icone {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            font-size: 17px;
+            background: #fff5dc;
+            color: var(--amarelo);
+        }
+
+        .cartao-icone.vendas {
+            background: #fff1e5;
+            color: var(--laranja);
+        }
+
+        .cartao-titulo {
+            margin: 0 0 5px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .cartao-descricao {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 11px;
+        }
+
+        .cartao-link {
+            flex-shrink: 0;
+            color: var(--vermelho);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .cartao-link:hover {
+            text-decoration: underline;
+        }
+
+        .lista-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            min-height: 72px;
+            padding: 17px 22px;
         }
 
         .lista-item + .lista-item {
             border-top: 1px solid var(--borda);
         }
 
-        .quantidade-baixa {
-            color: var(--vermelho);
+        .produto-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .produto-icone {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            color: var(--preto);
+            background: #f3f5f8;
+            font-size: 17px;
+        }
+
+        .produto-nome {
+            display: block;
+            font-size: 12px;
             font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .produto-descricao {
+            display: block;
+            margin-top: 5px;
+            font-size: 11px;
+            color: var(--secundario);
+        }
+
+        .selo {
+            display: inline-block;
+            flex-shrink: 0;
+            padding: 7px 9px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 800;
             white-space: nowrap;
         }
 
-        .quantidade-vendas {
-            color: #555;
-            font-weight: 600;
-            white-space: nowrap;
+        .selo-estoque {
+            color: #bf3027;
+            background: #fff0ef;
+        }
+
+        .selo-vendas {
+            color: var(--vinho);
+            background: #f8eaf0;
         }
 
         .lista-vazia {
-            color: #777;
-            text-align: center;
-            padding: 17px 10px;
-            font-size: 13px;
-        }
-
-        /* Menu inferior */
-
-        .menu-inferior {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            border-top: 1px solid var(--borda);
-            background: white;
-        }
-
-        .menu-item {
-            min-height: 64px;
-            padding: 9px 4px;
-            border: none;
-            background: white;
-            color: #444;
-            text-decoration: none;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 4px;
-            font-family: inherit;
+            gap: 11px;
+            min-height: 185px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .lista-vazia i {
+            display: grid;
+            place-items: center;
+            width: 49px;
+            height: 49px;
+            border-radius: 50%;
+            background: #f3f5f8;
+            color: #7c8999;
+            font-size: 23px;
+        }
+
+        .lista-vazia strong {
+            font-size: 13px;
+        }
+
+        .lista-vazia p {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .rodape {
+            margin-top: 24px;
+            color: #8a95a5;
             font-size: 11px;
-            font-weight: 600;
+            line-height: 1.6;
+            text-align: center;
         }
 
-        .menu-item i {
-            font-size: 21px;
-        }
+        /* =====================================
+           NOTEBOOKS E TELAS MÉDIAS
+        ===================================== */
 
-        .menu-item.ativo {
-            color: var(--vermelho);
-        }
-
-        .menu-item:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-        }
-
-        @media (max-width: 480px) {
-            body {
-                background: white;
-            }
-
-            .painel {
-                margin: 0;
-                border: none;
-                border-radius: 0;
-                box-shadow: none;
-                max-width: none;
-            }
-
-            .cabecalho {
-                padding: 12px;
+        @media (max-width: 1250px) {
+            .indicadores {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
             .conteudo {
-                padding: 13px;
+                padding: 28px 25px 40px;
             }
 
-            .nome-loja {
-                font-size: 16px;
+            .topo {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+        }
+
+        /* =====================================
+           TABLETS E CELULARES
+        ===================================== */
+
+        @media (max-width: 960px) {
+            .app {
+                display: block;
             }
 
-            .logo {
-                width: 42px;
-                height: 42px;
+            .sidebar {
+                display: none;
             }
 
-            .acao {
+            .topo {
+                display: none;
+            }
+
+            /* Cabeçalho escuro no mobile */
+            .mobile-topo {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                min-height: 72px;
+                padding: 12px 22px;
+                background: var(--menu);
+                color: white;
+                border-bottom: 2px solid var(--vermelho);
+            }
+
+            .mobile-marca {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                min-width: 0;
+            }
+
+            .mobile-logo {
+                display: grid;
+                place-items: center;
+                flex-shrink: 0;
+                width: 41px;
+                height: 41px;
+                border-radius: 11px;
+                background: var(--vermelho);
+                color: white;
+                font-size: 23px;
+            }
+
+            .mobile-marca strong {
+                display: block;
+                font-size: 15px;
+                line-height: 1.3;
+            }
+
+            .mobile-saudacao {
+                flex-shrink: 0;
+                color: #cbd3df;
                 font-size: 11px;
+                text-align: right;
+            }
+
+            .mobile-saudacao strong {
+                display: block;
+                margin-top: 3px;
+                color: white;
+                font-size: 12px;
+                overflow-wrap: anywhere;
+            }
+
+            .mobile-navegacao {
+                position: fixed;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 20;
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+                background: white;
+                border-top: 1px solid var(--borda);
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+            }
+
+            .mobile-link {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
                 gap: 5px;
+                min-height: 48px;
+                padding: 5px 2px;
+                color: #788393;
+                font-size: 10px;
+                font-weight: 700;
+                text-align: center;
+            }
+
+            .mobile-link i {
+                font-size: 21px;
+            }
+
+            .mobile-link.ativo {
+                color: var(--vermelho);
+            }
+
+            .mobile-link:hover {
+                color: var(--vinho);
+            }
+
+            .principal {
+                padding-bottom: 82px;
+            }
+
+            .conteudo {
+                max-width: 800px;
+                padding: 26px 22px 35px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .paineis {
+                grid-template-columns: 1fr;
+            }
+
+            .indicadores {
+                gap: 11px;
             }
 
             .indicador {
-                padding: 12px 10px;
+                padding: 17px;
             }
 
-            .menu-item {
+            .indicador-superior {
+                margin-bottom: 15px;
+            }
+
+            .indicador-numero {
+                font-size: 27px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .mobile-topo {
+                padding: 11px 15px;
+            }
+
+            .mobile-marca strong {
+                font-size: 13px;
+            }
+
+            .mobile-logo {
+                width: 38px;
+                height: 38px;
+            }
+
+            .conteudo {
+                padding: 23px 14px 30px;
+            }
+
+            .indicador {
+                padding: 14px;
+            }
+
+            .indicador-icone {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .indicador-legenda {
                 font-size: 10px;
+            }
+
+            .indicador-nome {
+                font-size: 11px;
+                line-height: 1.4;
+            }
+
+            .cartao-cabecalho,
+            .lista-item {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .cartao-descricao {
+                line-height: 1.4;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .menu-link {
+                transition: none;
             }
         }
     </style>
@@ -328,197 +758,498 @@
 
 <body>
 
-    <div class="painel">
+<div class="app">
 
-        <!-- CABEÇALHO -->
-        <header class="cabecalho">
+    <!-- =====================================
+         MENU LATERAL DO COMPUTADOR
+    ====================================== -->
+    <aside class="sidebar">
 
-            <div class="identificacao">
-                <div class="logo">
-                    <i class="bi bi-bicycle"></i>
-                </div>
-
-                <div>
-                    <p class="saudacao">Olá!</p>
-                    <h1 class="nome-loja">Casa das Bicicletas</h1>
-                </div>
+        <div class="marca">
+            <div class="marca-icone">
+                <i class="bi bi-bicycle"></i>
             </div>
 
-            <button
-                class="perfil"
-                type="button"
-                title="Perfil em desenvolvimento"
-                aria-label="Perfil em desenvolvimento"
-                disabled
+            <h2 class="marca-nome">
+                Casa das Bicicletas
+            </h2>
+        </div>
+
+        <div class="menu-titulo">
+            Menu principal
+        </div>
+
+        <nav class="menu" aria-label="Navegação administrativa">
+
+            <a
+                href="{% url 'dashboard' %}"
+                class="menu-link ativo"
+                aria-current="page"
             >
-                <i class="bi bi-person"></i>
-            </button>
+                <i class="bi bi-grid-1x2-fill"></i>
+                Visão geral
+            </a>
+
+            <a
+                href="{% url 'produtos' %}"
+                class="menu-link"
+            >
+                <i class="bi bi-bicycle"></i>
+                Produtos
+            </a>
+
+            <a
+                href="{% url 'novo_produto' %}"
+                class="menu-link"
+            >
+                <i class="bi bi-plus-square"></i>
+                Novo produto
+            </a>
+
+            <a
+                href="{% url 'vendas' %}"
+                class="menu-link"
+            >
+                <i class="bi bi-cart3"></i>
+                Registrar venda
+            </a>
+
+            <a
+                href="{% url 'historico_vendas' %}"
+                class="menu-link"
+            >
+                <i class="bi bi-receipt"></i>
+                Histórico de vendas
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- =====================================
+         CABEÇALHO MOBILE
+    ====================================== -->
+    <header class="mobile-topo">
+
+        <div class="mobile-marca">
+            <div class="mobile-logo">
+                <i class="bi bi-bicycle"></i>
+            </div>
+
+            <strong>Casa das Bicicletas</strong>
+        </div>
+
+        <div class="mobile-saudacao">
+            Olá,
+            <strong>
+                {{ request.user.get_short_name|default:request.user.username }}
+            </strong>
+        </div>
+
+    </header>
+
+    <!-- =====================================
+         CONTEÚDO
+    ====================================== -->
+    <div class="principal">
+
+        <!-- TOPO DESKTOP -->
+        <header class="topo">
+
+            <div class="topo-contexto">
+                <i class="bi bi-grid-1x2"></i>
+                <span>
+                    Área administrativa / Visão geral
+                </span>
+            </div>
+
+            <div class="topo-saudacao">
+                <span>Olá,</span>
+                <strong>
+                    {{ request.user.get_short_name|default:request.user.username }}
+                </strong>
+            </div>
 
         </header>
 
         <main class="conteudo">
 
-            <!-- BOTÕES PRINCIPAIS -->
-            <div class="acoes">
+            <!-- APRESENTAÇÃO -->
+            <section class="boas-vindas">
 
-                <button
-                    class="acao acao-venda"
-                    type="button"
-                    title="Registro de vendas em desenvolvimento"
-                    disabled
-                >
-                    <i class="bi bi-cart3"></i>
-                    Registrar venda
-                </button>
+                <span class="etiqueta">
+                    <i class="bi bi-circle-fill"></i>
+                    Painel administrativo
+                </span>
 
-                <button
-                    class="acao acao-estoque"
-                    type="button"
-                    title="Entrada de estoque em desenvolvimento"
-                    disabled
-                >
-                    <i class="bi bi-box-seam"></i>
-                    Entrada de estoque
-                </button>
+                <h1>
+                    Visão geral da loja
+                </h1>
 
-            </div>
+                <p class="descricao">
+                    Acompanhe as vendas, os produtos e a situação
+                    do estoque da Casa das Bicicletas.
+                </p>
 
-            <!-- INDICADORES -->
-            <section class="indicadores">
+            </section>
 
-                <div class="indicador">
-                    <p class="indicador-titulo">Vendas no mês</p>
+            <!-- =====================================
+                 INDICADORES REAIS
+            ====================================== -->
+            <section
+                class="indicadores"
+                aria-label="Indicadores da loja"
+            >
+
+                <!-- VENDAS -->
+                <article class="indicador">
+
+                    <div class="indicador-superior">
+
+                        <div class="indicador-icone icone-laranja">
+                            <i class="bi bi-bag-check"></i>
+                        </div>
+
+                        <span class="indicador-legenda">
+                            Este mês
+                        </span>
+
+                    </div>
+
                     <p class="indicador-numero">
                         {{ vendas_mes|default:0 }}
                     </p>
-                </div>
 
-                <div class="indicador">
-                    <p class="indicador-titulo">Bikes em estoque</p>
-                    <p class="indicador-numero">
-                        {{ bikes_estoque|default:0 }}
+                    <p class="indicador-nome">
+                        Vendas registradas
                     </p>
-                </div>
 
-                <div class="indicador">
-                    <p class="indicador-titulo">Produtos cadastrados</p>
+                </article>
+
+                <!-- PRODUTOS -->
+                <article class="indicador">
+
+                    <div class="indicador-superior">
+
+                        <div class="indicador-icone icone-preto">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+
+                        <span class="indicador-legenda">
+                            Ativos
+                        </span>
+
+                    </div>
+
                     <p class="indicador-numero">
                         {{ produtos_cadastrados|default:0 }}
                     </p>
-                </div>
 
-                <div class="indicador indicador-destaque">
-                    <p class="indicador-titulo">Estoque baixo</p>
+                    <p class="indicador-nome">
+                        Produtos cadastrados
+                    </p>
+
+                </article>
+
+                <!-- BICICLETAS -->
+                <article class="indicador">
+
+                    <div class="indicador-superior">
+
+                        <div class="indicador-icone icone-vinho">
+                            <i class="bi bi-bicycle"></i>
+                        </div>
+
+                        <span class="indicador-legenda">
+                            Disponíveis
+                        </span>
+
+                    </div>
+
+                    <p class="indicador-numero">
+                        {{ bikes_estoque|default:0 }}
+                    </p>
+
+                    <p class="indicador-nome">
+                        Bicicletas em estoque
+                    </p>
+
+                </article>
+
+                <!-- ESTOQUE BAIXO -->
+                <article class="indicador {% if total_estoque_baixo %}indicador-alerta{% endif %}">
+
+                    <div class="indicador-superior">
+
+                        <div class="indicador-icone icone-amarelo">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+
+                        <span class="indicador-legenda">
+                            {% if total_estoque_baixo %}
+                                Atenção
+                            {% else %}
+                                Normal
+                            {% endif %}
+                        </span>
+
+                    </div>
+
                     <p class="indicador-numero">
                         {{ total_estoque_baixo|default:0 }}
                     </p>
-                </div>
+
+                    <p class="indicador-nome">
+                        Produtos com estoque baixo
+                    </p>
+
+                </article>
 
             </section>
 
-            <!-- PRODUTOS COM ESTOQUE BAIXO -->
-            <section class="secao">
+            <!-- =====================================
+                 MONITORAMENTO
+            ====================================== -->
+            <div class="secao-titulo-geral">
 
-                <h2 class="secao-titulo">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    Acabando no estoque
+                <h2>
+                    Monitoramento da loja
                 </h2>
 
-                <div class="lista">
+                <span class="secao-subtitulo">
+                    Informações dos registros do sistema
+                </span>
 
-                    {% for produto in produtos_estoque_baixo %}
+            </div>
 
-                        <div class="lista-item">
-                            <span>{{ produto.nome }}</span>
-                            <span class="quantidade-baixa">
-                                {{ produto.quantidade }} un.
-                            </span>
+            <div class="paineis">
+
+                <!-- ESTOQUE BAIXO -->
+                <section class="cartao">
+
+                    <div class="cartao-cabecalho">
+
+                        <div class="cartao-identificacao">
+
+                            <div class="cartao-icone">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+
+                            <div>
+                                <h3 class="cartao-titulo">
+                                    Atenção ao estoque
+                                </h3>
+
+                                <p class="cartao-descricao">
+                                    Produtos que precisam de reposição
+                                </p>
+                            </div>
+
                         </div>
 
-                    {% empty %}
+                        <a
+                            href="{% url 'produtos' %}"
+                            class="cartao-link"
+                        >
+                            Ver produtos
+                        </a>
 
-                        <div class="lista-vazia">
-                            Nenhum produto com estoque baixo.
+                    </div>
+
+                    <div>
+
+                        {% for produto in produtos_estoque_baixo %}
+
+                            <div class="lista-item">
+
+                                <div class="produto-info">
+
+                                    <div class="produto-icone">
+                                        <i class="bi bi-box"></i>
+                                    </div>
+
+                                    <div>
+                                        <span class="produto-nome">
+                                            {{ produto.nome }}
+                                        </span>
+
+                                        <span class="produto-descricao">
+                                            Quantidade disponível
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <span class="selo selo-estoque">
+                                    {{ produto.quantidade }} un.
+                                </span>
+
+                            </div>
+
+                        {% empty %}
+
+                            <div class="lista-vazia">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                <strong>
+                                    Nenhum alerta de estoque
+                                </strong>
+
+                                <p>
+                                    Não há produtos ativos abaixo
+                                    ou no limite mínimo cadastrado.
+                                </p>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+                <!-- MAIS VENDIDOS -->
+                <section class="cartao">
+
+                    <div class="cartao-cabecalho">
+
+                        <div class="cartao-identificacao">
+
+                            <div class="cartao-icone vendas">
+                                <i class="bi bi-bar-chart"></i>
+                            </div>
+
+                            <div>
+                                <h3 class="cartao-titulo">
+                                    Mais vendidos
+                                </h3>
+
+                                <p class="cartao-descricao">
+                                    Ranking de produtos deste mês
+                                </p>
+                            </div>
+
                         </div>
 
-                    {% endfor %}
+                        <a
+                            href="{% url 'historico_vendas' %}"
+                            class="cartao-link"
+                        >
+                            Ver histórico
+                        </a>
 
-                </div>
+                    </div>
 
-            </section>
+                    <div>
 
-            <!-- MAIS VENDIDOS -->
-            <section class="secao">
+                        {% for produto in produtos_mais_vendidos %}
 
-                <h2 class="secao-titulo">
-                    <i class="bi bi-graph-up-arrow"></i>
-                    Mais vendidos do mês
-                </h2>
+                            <div class="lista-item">
 
-                <div class="lista">
+                                <div class="produto-info">
 
-                    {% for produto in produtos_mais_vendidos %}
+                                    <div class="produto-icone">
+                                        <i class="bi bi-trophy"></i>
+                                    </div>
 
-                        <div class="lista-item">
-                            <span>
-                                {{ forloop.counter }}.
-                                {{ produto.nome }}
-                            </span>
+                                    <div>
+                                        <span class="produto-nome">
+                                            {{ forloop.counter }}.
+                                            {{ produto.nome }}
+                                        </span>
 
-                            <span class="quantidade-vendas">
-                                {{ produto.total_vendido }}
-                            </span>
-                        </div>
+                                        <span class="produto-descricao">
+                                            Unidades vendidas no mês
+                                        </span>
+                                    </div>
 
-                    {% empty %}
+                                </div>
 
-                        <div class="lista-vazia">
-                            Nenhuma venda registrada ainda.
-                        </div>
+                                <span class="selo selo-vendas">
+                                    {{ produto.total_vendido }} un.
+                                </span>
 
-                    {% endfor %}
+                            </div>
 
-                </div>
+                        {% empty %}
 
-            </section>
+                            <div class="lista-vazia">
+
+                                <i class="bi bi-bar-chart"></i>
+
+                                <strong>
+                                    Nenhuma venda neste mês
+                                </strong>
+
+                                <p>
+                                    Os produtos mais vendidos aparecerão
+                                    aqui após o registro das vendas.
+                                </p>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <footer class="rodape">
+                Casa das Bicicletas — Painel administrativo.
+                Os indicadores são calculados a partir dos dados cadastrados.
+            </footer>
 
         </main>
 
-        <!-- MENU INFERIOR -->
-        <nav class="menu-inferior" aria-label="Menu principal">
-
-            <a
-                class="menu-item ativo"
-                href="/dashboard/"
-                aria-current="page"
-            >
-                <i class="bi bi-house-door"></i>
-                <span>Início</span>
-            </a>
-
-            <button class="menu-item" type="button" disabled>
-                <i class="bi bi-bicycle"></i>
-                <span>Produtos</span>
-            </button>
-
-            <button class="menu-item" type="button" disabled>
-                <i class="bi bi-box-seam"></i>
-                <span>Estoque</span>
-            </button>
-
-            <button class="menu-item" type="button" disabled>
-                <i class="bi bi-cart3"></i>
-                <span>Vendas</span>
-            </button>
-
-            <button class="menu-item" type="button" disabled>
-                <i class="bi bi-list"></i>
-                <span>Mais</span>
-            </button>
-
-        </nav>
-
     </div>
+
+    <!-- =====================================
+         NAVEGAÇÃO MOBILE
+    ====================================== -->
+    <nav
+        class="mobile-navegacao"
+        aria-label="Navegação mobile"
+    >
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="mobile-link ativo"
+            aria-current="page"
+        >
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Início</span>
+        </a>
+
+        <a
+            href="{% url 'produtos' %}"
+            class="mobile-link"
+        >
+            <i class="bi bi-bicycle"></i>
+            <span>Produtos</span>
+        </a>
+
+        <a
+            href="{% url 'vendas' %}"
+            class="mobile-link"
+        >
+            <i class="bi bi-cart3"></i>
+            <span>Vendas</span>
+        </a>
+
+        <a
+            href="{% url 'historico_vendas' %}"
+            class="mobile-link"
+        >
+            <i class="bi bi-receipt"></i>
+            <span>Histórico</span>
+        </a>
+
+    </nav>
+
+</div>
 
 </body>
 </html>
