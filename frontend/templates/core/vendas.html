@@ -1,307 +1,882 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendas | Casa das Bicicletas</title>
+    <title>Registrar venda | Casa das Bicicletas</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        * {
-            box-sizing: border-box;
+        :root {
+            --vermelho: #dc352b;
+            --vermelho-escuro: #bd2922;
+            --laranja: #ed6b23;
+            --vinho: #842d49;
+            --preto: #222b37;
+            --amarelo: #e49b12;
+            --fundo: #f5f6f8;
+            --branco: #ffffff;
+            --texto: #202838;
+            --secundario: #697386;
+            --borda: #e7eaf0;
+            --menu: #172131;
+            --menu-hover: #273346;
+            --sombra: 0 5px 22px rgba(25,35,52,.045);
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #20242a;
+            min-height: 100vh;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Cabeçalho */
-        header {
-            background: #c62828;
-            color: white;
-            padding: 22px 6%;
+        a { color: inherit; text-decoration: none; }
+        button, input, select { font: inherit; }
+
+        .app {
+            display: grid;
+            grid-template-columns: 252px minmax(0,1fr);
+            min-height: 100vh;
+        }
+
+        /* MENU LATERAL */
+
+        .sidebar {
+            position: sticky;
+            top: 0;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            height: 100vh;
+            padding: 27px 15px 20px;
+            background: var(--menu);
+            color: white;
+        }
+
+        .marca {
+            display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
+            padding: 4px 9px 29px;
+            border-bottom: 1px solid rgba(255,255,255,.09);
         }
 
-        header h1 {
+        .marca-icone, .mobile-logo {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            background: var(--vermelho);
+            color: white;
+            font-size: 25px;
+        }
+
+        .marca-nome {
             margin: 0;
-            font-size: 32px;
-            font-weight: 700;
+            color: white;
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.3;
         }
 
-        header a {
+        .menu-titulo {
+            padding: 27px 14px 10px;
+            color: #8997aa;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-height: 45px;
+            padding: 11px 14px;
+            border-radius: 9px;
+            color: #c4cbd7;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background .2s, color .2s;
+        }
+
+        .menu-link i {
+            width: 19px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .menu-link:hover {
+            background: var(--menu-hover);
+            color: white;
+        }
+
+        .menu-link.ativo {
+            background: var(--vermelho);
+            color: white;
+        }
+
+        .mobile-topo, .mobile-navegacao {
+            display: none;
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+
+        .principal { min-width: 0; }
+
+        .topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            min-height: 81px;
+            padding: 17px 35px;
+            background: white;
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .topo-contexto, .topo-saudacao {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--secundario);
+            font-size: 13px;
+        }
+
+        .topo-contexto i {
+            color: var(--vermelho);
+            font-size: 18px;
+        }
+
+        .topo-saudacao strong {
+            color: var(--texto);
+            overflow-wrap: anywhere;
+        }
+
+        .conteudo {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 34px 35px 48px;
+        }
+
+        .boas-vindas { margin-bottom: 29px; }
+
+        .etiqueta {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            background: #fff8f2;
-            color: #a91e1e;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 700;
-            padding: 13px 20px;
-            border: 2px solid white;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-            transition: background 0.2s ease, transform 0.2s ease;
+            gap: 7px;
+            color: var(--vermelho);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        header a:hover {
-            background: #ffffff;
-            transform: translateY(-2px);
+        h1 {
+            margin: 10px 0 9px;
+            font-size: clamp(24px,2.5vw,32px);
+            letter-spacing: -.8px;
         }
 
-        header a:focus-visible {
-            outline: 3px solid white;
-            outline-offset: 3px;
+        .descricao {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 13px;
+            line-height: 1.7;
         }
 
-        /* Conteúdo principal */
-        main {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 18px;
-        }
+        /* CARTÕES */
 
-        .card {
+        .cartao {
+            min-width: 0;
+            overflow: hidden;
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 3px 14px #00000010;
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            box-shadow: var(--sombra);
         }
 
-        h2 {
-            margin-top: 0;
+        .cartao-cabecalho {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 21px 22px;
+            border-bottom: 1px solid var(--borda);
         }
 
-        /* Formulário */
-        label {
+        .cartao-icone {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            background: #fff1e5;
+            color: var(--laranja);
+            font-size: 18px;
+        }
+
+        .cartao-titulo {
+            margin: 0 0 5px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .cartao-descricao {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .cartao-corpo { padding: 22px; }
+
+        .secao-titulo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .secao-titulo h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .secao-titulo span {
+            color: var(--secundario);
+            font-size: 12px;
+        }
+
+        /* ÁREA DE REGISTRO */
+
+        .paineis {
+            display: grid;
+            grid-template-columns: minmax(0,1.35fr) minmax(300px,.85fr);
+            gap: 20px;
+            align-items: start;
+            margin-bottom: 29px;
+        }
+
+        .campo { margin-bottom: 18px; }
+
+        .campo label {
             display: block;
-            margin: 15px 0 6px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 800;
         }
 
-        select,
-        input {
+        .campo input,
+        .campo select {
             display: block;
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font-size: 16px;
+            min-width: 0;
+            min-height: 44px;
+            padding: 11px 12px;
+            border: 1px solid #dce1e9;
+            border-radius: 9px;
+            outline: none;
             background: white;
+            color: var(--texto);
+            font-size: 13px;
         }
 
-        select:focus,
-        input:focus {
-            outline: 2px solid #c62828;
-            outline-offset: 1px;
+        .campo input:focus,
+        .campo select:focus {
+            border-color: var(--vermelho);
+            box-shadow: 0 0 0 3px rgba(220,53,43,.09);
         }
 
-        /* Aparência do campo desativado */
-        select:disabled {
-            background: #f0f0f0;
-            color: #777;
+        .campo select:disabled {
+            background: #f1f3f6;
+            color: #8993a2;
             cursor: not-allowed;
             opacity: 1;
         }
 
-        .ajuda-pagamento {
-            margin: 7px 0 0;
-            font-size: 13px;
-            color: #777;
+        .campos-duplos {
+            display: grid;
+            grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+            gap: 14px;
         }
 
-        button {
-            background: #c62828;
-            color: white;
-            border: 0;
-            border-radius: 7px;
-            padding: 13px 22px;
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
+        .campo-ajuda {
+            display: block;
+            margin-top: 7px;
+            color: var(--secundario);
+            font-size: 11px;
+            line-height: 1.6;
         }
 
-        button:hover {
-            background: #a91e1e;
+        .erro, .errorlist {
+            color: #b42323;
+            font-size: 12px;
+            line-height: 1.6;
         }
 
-        /* Mensagens e erros */
-        .mensagem {
-            padding: 12px;
-            border-radius: 7px;
-            margin-bottom: 14px;
-            background: #e8f5e9;
-        }
-
-        .erros,
         .errorlist {
-            color: #b71c1c;
-            margin-top: 8px;
+            margin: 7px 0 0;
+            padding-left: 18px;
         }
 
-        /* Funcionário responsável */
+        .erros-gerais {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            background: #fff0ef;
+            border-radius: 9px;
+        }
+
         .funcionario-info {
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 20px 0;
-            padding: 15px 18px;
-            background: #fff5f5;
-            border-left: 4px solid #c62828;
-            border-radius: 8px;
-            font-size: 15px;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding: 14px;
+            border: 1px solid var(--borda);
+            border-radius: 10px;
+            background: #fafbfc;
+        }
+
+        .funcionario-icone {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #eff0f2;
+            color: var(--preto);
+            font-size: 18px;
+        }
+
+        .funcionario-info small {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--secundario);
+            font-size: 11px;
         }
 
         .funcionario-info strong {
-            color: #a91e1e;
+            font-size: 13px;
+            overflow-wrap: anywhere;
         }
 
-        /* Resumo automático da venda */
+        .subtitulo-formulario {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 6px 0 18px;
+            padding-bottom: 11px;
+            border-bottom: 1px solid var(--borda);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .subtitulo-formulario i {
+            color: var(--vermelho);
+            font-size: 16px;
+        }
+
+        .ajuda-pagamento {
+            margin: 8px 0 0;
+            padding: 11px 12px;
+            border-radius: 8px;
+            background: #fff5e7;
+            color: #945b12;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .ajuda-pagamento[hidden],
+        .aviso-estoque[hidden] {
+            display: none;
+        }
+
+        .botao {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 46px;
+            padding: 12px 17px;
+            border: 0;
+            border-radius: 9px;
+            background: var(--vermelho);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            background: var(--vermelho-escuro);
+        }
+
+        .botao-largura { width: 100%; }
+
+        .botao-secundario {
+            background: white;
+            border: 1px solid var(--borda);
+            color: var(--texto);
+        }
+
+        .botao-secundario:hover {
+            background: #f5f6f8;
+        }
+
+        .acoes-formulario {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 11px;
+            margin-top: 23px;
+        }
+
+        .acoes-formulario .botao {
+            flex: 1;
+        }
+
+        /* RESUMO AUTOMÁTICO */
+
         .resumo-venda {
-            margin: 22px 0;
-            padding: 20px;
-            background: #fff8f7;
-            border: 1px solid #f1d1cd;
-            border-radius: 12px;
+            padding: 22px;
         }
 
-        .resumo-venda h3 {
-            margin: 0 0 16px;
-            color: #a91e1e;
-            font-size: 19px;
+        .resumo-destaque {
+            padding: 21px;
+            margin-bottom: 19px;
+            border-radius: 12px;
+            background: #fff3f0;
+            border: 1px solid #f8e0dc;
+        }
+
+        .resumo-destaque small {
+            display: block;
+            margin-bottom: 10px;
+            color: #a55a51;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .resumo-destaque strong {
+            display: block;
+            color: var(--vermelho);
+            font-size: clamp(26px,3vw,34px);
+            font-weight: 800;
+            letter-spacing: -.8px;
+            overflow-wrap: anywhere;
         }
 
         .resumo-linha {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid #eedbd8;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--borda);
+            font-size: 12px;
         }
 
-        .resumo-linha:last-child {
-            border-bottom: none;
+        .resumo-linha span {
+            color: var(--secundario);
         }
 
-        .resumo-total {
-            color: #a91e1e;
-            font-size: 19px;
-            font-weight: bold;
+        .resumo-linha strong {
+            text-align: right;
+            font-size: 13px;
+        }
+
+        .resumo-linha:last-of-type {
+            border-bottom: 0;
         }
 
         .aviso-estoque {
-            margin: 12px 0 0;
-            color: #b71c1c;
-            font-weight: bold;
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            margin: 16px 0 0;
+            padding: 12px;
+            border-radius: 9px;
+            background: #fff0ef;
+            color: #b42323;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.6;
         }
 
-        /* Histórico de vendas */
-        .tabela {
+        .nota-resumo {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 19px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #f5f7fa;
+            color: var(--secundario);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .nota-resumo i {
+            color: var(--laranja);
+            font-size: 17px;
+        }
+
+        /* MENSAGENS */
+
+        .mensagem {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 19px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .mensagem.success {
+            color: #166534;
+            background: #eaf8ee;
+        }
+
+        .mensagem.error {
+            color: #a52323;
+            background: #fff0ef;
+        }
+
+        .mensagem.info {
+            color: #37517b;
+            background: #edf3ff;
+        }
+
+        /* HISTÓRICO DE VENDAS */
+
+        .historico-cartao {
+            margin-bottom: 25px;
+        }
+
+        .historico-cabecalho {
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .historico-cabecalho-esquerda {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .link-historico {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--vermelho);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .link-historico:hover {
+            text-decoration: underline;
+        }
+
+        .tabela-rolagem {
             overflow-x: auto;
-            width: 100%;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 700px;
-        }
-
-        th,
-        td {
             text-align: left;
-            padding: 13px;
-            border-bottom: 1px solid #e5e5e5;
         }
 
         th {
-            background: #f3f3f3;
+            padding: 15px 17px;
+            background: #fafbfc;
+            color: var(--secundario);
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
         }
 
-        /* Tablets */
-        @media (max-width: 900px) {
-            header {
-                padding: 20px 4%;
+        td {
+            padding: 16px 17px;
+            border-top: 1px solid var(--borda);
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        .tabela-produto {
+            font-weight: 800;
+        }
+
+        .tabela-secundario {
+            display: block;
+            margin-top: 5px;
+            color: var(--secundario);
+            font-size: 11px;
+            overflow-wrap: anywhere;
+        }
+
+        .valor-total {
+            color: var(--texto);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .selo {
+            display: inline-block;
+            padding: 7px 9px;
+            border-radius: 7px;
+            background: #eaf8ee;
+            color: #16703a;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .historico-mobile {
+            display: none;
+        }
+
+        .historico-item {
+            padding: 17px;
+            border-top: 1px solid var(--borda);
+        }
+
+        .historico-item:first-child {
+            border-top: 0;
+        }
+
+        .historico-item-topo {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .historico-item strong {
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .historico-item p {
+            margin: 9px 0 0;
+            color: var(--secundario);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .lista-vazia {
+            padding: 35px 22px;
+            color: var(--secundario);
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .lista-vazia i {
+            display: block;
+            margin-bottom: 12px;
+            color: #8995a6;
+            font-size: 29px;
+        }
+
+        .rodape {
+            margin-top: 24px;
+            color: #8a95a5;
+            font-size: 11px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 1250px) {
+            .conteudo {
+                padding: 28px 25px 40px;
             }
 
-            header h1 {
-                font-size: 26px;
+            .topo {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            .paineis {
+                grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr);
             }
         }
 
-        /* Celulares */
-        @media (max-width: 600px) {
-            header {
-                flex-direction: column;
-                align-items: stretch;
-                justify-content: center;
-                gap: 14px;
-                padding: 20px 16px;
+        @media (max-width: 1100px) {
+            .paineis {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .app { display: block; }
+
+            .sidebar, .topo {
+                display: none;
             }
 
-            header h1 {
+            .mobile-topo {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                min-height: 72px;
+                padding: 12px 22px;
+                background: var(--menu);
+                color: white;
+                border-bottom: 2px solid var(--vermelho);
+            }
+
+            .mobile-marca {
+                display: flex;
+                align-items: center;
+                gap: 11px;
+                min-width: 0;
+            }
+
+            .mobile-logo {
+                width: 41px;
+                height: 41px;
+                border-radius: 11px;
                 font-size: 23px;
-                line-height: 1.3;
-                text-align: center;
-                overflow-wrap: break-word;
             }
 
-            header a {
-                align-self: flex-end;
-                font-size: 13px;
-                padding: 11px 15px;
-                max-width: 100%;
+            .mobile-marca strong {
+                font-size: 15px;
             }
 
-            main {
-                margin: 20px auto;
-                padding: 0 12px;
+            .mobile-saudacao {
+                color: #cbd3df;
+                font-size: 11px;
+                text-align: right;
             }
 
-            .card {
-                padding: 18px;
+            .mobile-saudacao strong {
+                display: block;
+                margin-top: 3px;
+                color: white;
+                font-size: 12px;
+                overflow-wrap: anywhere;
             }
 
-            .funcionario-info {
+            .mobile-navegacao {
+                position: fixed;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 20;
+                display: grid;
+                grid-template-columns: repeat(5,minmax(0,1fr));
+                padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
+                background: white;
+                border-top: 1px solid var(--borda);
+                box-shadow: 0 -4px 20px rgba(0,0,0,.04);
+            }
+
+            .mobile-link {
+                display: flex;
                 flex-direction: column;
-                align-items: flex-start;
-                font-size: 14px;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                min-height: 48px;
+                padding: 5px 2px;
+                color: #788393;
+                font-size: 10px;
+                font-weight: 700;
+                text-align: center;
             }
 
-            .resumo-venda {
-                padding: 15px;
+            .mobile-link i {
+                font-size: 21px;
             }
 
-            .resumo-linha {
-                flex-wrap: wrap;
+            .mobile-link.ativo {
+                color: var(--vermelho);
             }
 
-            .resumo-total {
-                font-size: 17px;
+            .principal {
+                padding-bottom: 82px;
+            }
+
+            .conteudo {
+                max-width: 800px;
+                padding: 26px 22px 35px;
             }
         }
 
-        /* Celulares muito estreitos */
-        @media (max-width: 360px) {
-            header h1 {
-                font-size: 20px;
+        @media (max-width: 700px) {
+            .tabela-rolagem {
+                display: none;
             }
 
-            header a {
-                font-size: 12px;
-                padding: 10px 12px;
+            .historico-mobile {
+                display: block;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .mobile-topo {
+                padding: 11px 15px;
+            }
+
+            .mobile-marca strong {
+                font-size: 13px;
+            }
+
+            .mobile-logo {
+                width: 38px;
+                height: 38px;
+            }
+
+            .conteudo {
+                padding: 23px 14px 30px;
+            }
+
+            .cartao-cabecalho,
+            .cartao-corpo,
+            .resumo-venda {
+                padding: 17px;
+            }
+
+            .campos-duplos {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .acoes-formulario {
+                flex-direction: column;
+            }
+
+            .acoes-formulario .botao {
+                width: 100%;
+            }
+
+            .mobile-link {
+                font-size: 9px;
             }
         }
     </style>
@@ -309,309 +884,606 @@
 
 <body>
 
-    <header>
-        <h1>Casa das Bicicletas</h1>
+<div class="app">
 
-        <a href="{% url 'dashboard' %}">
-            &larr; Voltar ao painel
-        </a>
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
+
+        <div class="marca">
+            <div class="marca-icone">
+                <i class="bi bi-bicycle"></i>
+            </div>
+            <h2 class="marca-nome">Casa das Bicicletas</h2>
+        </div>
+
+        <div class="menu-titulo">Menu principal</div>
+
+        <nav class="menu" aria-label="Navegação administrativa">
+
+            <a href="{% url 'dashboard' %}" class="menu-link">
+                <i class="bi bi-grid-1x2-fill"></i>
+                Visão geral
+            </a>
+
+            <a href="{% url 'produtos' %}" class="menu-link">
+                <i class="bi bi-bicycle"></i>
+                Produtos
+            </a>
+
+            <a href="{% url 'novo_produto' %}" class="menu-link">
+                <i class="bi bi-plus-square"></i>
+                Novo produto
+            </a>
+
+            <a href="{% url 'vendas' %}"
+               class="menu-link ativo"
+               aria-current="page">
+                <i class="bi bi-cart3"></i>
+                Registrar venda
+            </a>
+
+            <a href="{% url 'historico_vendas' %}" class="menu-link">
+                <i class="bi bi-receipt"></i>
+                Histórico de vendas
+            </a>
+
+            <a href="{% url 'controle_estoque' %}" class="menu-link">
+                <i class="bi bi-box-seam"></i>
+                Controle de estoque
+            </a>
+
+        </nav>
+    </aside>
+
+    <!-- CABEÇALHO MOBILE -->
+    <header class="mobile-topo">
+
+        <div class="mobile-marca">
+            <div class="mobile-logo">
+                <i class="bi bi-bicycle"></i>
+            </div>
+            <strong>Casa das Bicicletas</strong>
+        </div>
+
+        <div class="mobile-saudacao">
+            Olá,
+            <strong>
+                {{ request.user.get_short_name|default:request.user.username }}
+            </strong>
+        </div>
+
     </header>
 
-    <main>
+    <div class="principal">
 
-        <!-- REGISTRAR VENDA -->
-        <section class="card">
-            <h2>Registrar venda</h2>
+        <!-- CABEÇALHO DESKTOP -->
+        <header class="topo">
 
-            <p>
-                Preencha os dados da venda para atualizar o estoque.
-            </p>
-
-            <div class="funcionario-info">
-                <strong>Funcionário responsável:</strong>
-                <span>
-                    {{ request.user.get_full_name|default:request.user.username }}
-                </span>
+            <div class="topo-contexto">
+                <i class="bi bi-cart3"></i>
+                <span>Área administrativa / Registrar venda</span>
             </div>
 
+            <div class="topo-saudacao">
+                <span>Olá,</span>
+                <strong>
+                    {{ request.user.get_short_name|default:request.user.username }}
+                </strong>
+            </div>
+
+        </header>
+
+        <main class="conteudo">
+
+            <!-- APRESENTAÇÃO -->
+            <section class="boas-vindas">
+
+                <span class="etiqueta">
+                    <i class="bi bi-circle-fill"></i>
+                    Gestão comercial
+                </span>
+
+                <h1>Registrar venda</h1>
+
+                <p class="descricao">
+                    Registre as vendas da Casa das Bicicletas,
+                    acompanhe os valores e mantenha o estoque atualizado automaticamente.
+                </p>
+
+            </section>
+
+            <!-- MENSAGENS -->
             {% if messages %}
                 {% for message in messages %}
-                    <div class="mensagem">
-                        {{ message }}
+                    <div class="mensagem {% if 'success' in message.tags %}success{% elif 'error' in message.tags %}error{% else %}info{% endif %}"
+                         role="status">
+                        <i class="bi bi-info-circle"></i>
+                        <span>{{ message }}</span>
                     </div>
                 {% endfor %}
             {% endif %}
 
-            <form method="post">
-                {% csrf_token %}
+            <div class="secao-titulo">
+                <h2>Nova venda</h2>
+                <span>Preencha os dados para registrar a operação</span>
+            </div>
 
-                {{ formulario.produto.label_tag }}
-                {{ formulario.produto }}
-                {{ formulario.produto.errors }}
+            <div class="paineis">
 
-                {{ formulario.quantidade.label_tag }}
-                {{ formulario.quantidade }}
-                {{ formulario.quantidade.errors }}
+                <!-- FORMULÁRIO -->
+                <section class="cartao">
 
-                <!-- RESUMO AUTOMÁTICO -->
-                <div class="resumo-venda">
-                    <h3>Resumo da venda</h3>
+                    <div class="cartao-cabecalho">
+                        <div class="cartao-icone">
+                            <i class="bi bi-cart-plus"></i>
+                        </div>
 
-                    <div class="resumo-linha">
-                        <span>Preço unitário:</span>
-                        <strong id="preco-unitario">R$ 0,00</strong>
+                        <div>
+                            <h3 class="cartao-titulo">Dados da venda</h3>
+                            <p class="cartao-descricao">
+                                Informe o produto, cliente e pagamento
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="resumo-linha">
-                        <span>Estoque disponível:</span>
-                        <strong id="estoque-disponivel">—</strong>
+                    <div class="cartao-corpo">
+
+                        <div class="funcionario-info">
+                            <div class="funcionario-icone">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+
+                            <div>
+                                <small>Funcionário responsável</small>
+                                <strong>
+                                    {{ request.user.get_full_name|default:request.user.username }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <form method="post" id="formulario-venda">
+                            {% csrf_token %}
+
+                            {% if formulario.non_field_errors %}
+                                <div class="erros-gerais erro" role="alert">
+                                    {{ formulario.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="subtitulo-formulario">
+                                <i class="bi bi-box-seam"></i>
+                                Produto e quantidade
+                            </div>
+
+                            <div class="campo">
+                                {{ formulario.produto.label_tag }}
+                                {{ formulario.produto }}
+                                <div class="erro">{{ formulario.produto.errors }}</div>
+                            </div>
+
+                            <div class="campo">
+                                {{ formulario.quantidade.label_tag }}
+                                {{ formulario.quantidade }}
+                                <div class="erro">{{ formulario.quantidade.errors }}</div>
+                                <span class="campo-ajuda">
+                                    A quantidade vendida será descontada do estoque após a confirmação.
+                                </span>
+                            </div>
+
+                            <div class="subtitulo-formulario">
+                                <i class="bi bi-person-lines-fill"></i>
+                                Cliente e pagamento
+                            </div>
+
+                            <div class="campo">
+                                {{ formulario.nome_cliente.label_tag }}
+                                {{ formulario.nome_cliente }}
+                                <div class="erro">{{ formulario.nome_cliente.errors }}</div>
+                            </div>
+
+                            <div class="campos-duplos">
+
+                                <div class="campo">
+                                    {{ formulario.situacao_pagamento.label_tag }}
+                                    {{ formulario.situacao_pagamento }}
+                                    <div class="erro">
+                                        {{ formulario.situacao_pagamento.errors }}
+                                    </div>
+                                </div>
+
+                                <div class="campo">
+                                    {{ formulario.forma_pagamento.label_tag }}
+                                    {{ formulario.forma_pagamento }}
+                                    <div class="erro">
+                                        {{ formulario.forma_pagamento.errors }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <p id="ajuda-pagamento"
+                               class="ajuda-pagamento"
+                               hidden>
+                                <i class="bi bi-info-circle"></i>
+                                A forma de pagamento será informada quando
+                                o cliente quitar o fiado.
+                            </p>
+
+                            <div class="acoes-formulario">
+
+                                <button type="submit" class="botao">
+                                    <i class="bi bi-check-circle"></i>
+                                    Confirmar venda
+                                </button>
+
+                                <a href="{% url 'dashboard' %}"
+                                   class="botao botao-secundario">
+                                    <i class="bi bi-x-circle"></i>
+                                    Cancelar
+                                </a>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </section>
+
+                <!-- RESUMO DA VENDA -->
+                <section class="cartao">
+
+                    <div class="cartao-cabecalho">
+                        <div class="cartao-icone">
+                            <i class="bi bi-receipt-cutoff"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="cartao-titulo">Resumo da venda</h3>
+                            <p class="cartao-descricao">
+                                Valores calculados automaticamente
+                            </p>
+                        </div>
                     </div>
 
-                    <div class="resumo-linha resumo-total">
-                        <span>Total da venda:</span>
-                        <strong id="total-venda">R$ 0,00</strong>
+                    <div class="resumo-venda">
+
+                        <div class="resumo-destaque">
+                            <small>Total da venda</small>
+                            <strong id="total-venda">R$ 0,00</strong>
+                        </div>
+
+                        <div class="resumo-linha">
+                            <span>Preço unitário</span>
+                            <strong id="preco-unitario">R$ 0,00</strong>
+                        </div>
+
+                        <div class="resumo-linha">
+                            <span>Estoque disponível</span>
+                            <strong id="estoque-disponivel">—</strong>
+                        </div>
+
+                        <div class="resumo-linha">
+                            <span>Quantidade solicitada</span>
+                            <strong id="quantidade-resumo">0 un.</strong>
+                        </div>
+
+                        <p id="aviso-estoque"
+                           class="aviso-estoque"
+                           role="alert"
+                           hidden>
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Quantidade maior que o estoque disponível.
+                        </p>
+
+                        <div class="nota-resumo">
+                            <i class="bi bi-shield-check"></i>
+                            <span>
+                                O estoque é atualizado somente após a venda
+                                ser validada e registrada pelo sistema.
+                                Vendas fiadas também descontam o estoque.
+                            </span>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- ÚLTIMAS VENDAS -->
+            <div class="secao-titulo">
+                <h2>Últimas vendas</h2>
+                <span>20 registros mais recentes</span>
+            </div>
+
+            <section class="cartao historico-cartao">
+
+                <div class="cartao-cabecalho historico-cabecalho">
+
+                    <div class="historico-cabecalho-esquerda">
+                        <div class="cartao-icone">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="cartao-titulo">Vendas recentes</h3>
+                            <p class="cartao-descricao">
+                                Operações registradas pelos funcionários
+                            </p>
+                        </div>
                     </div>
 
-                    <p
-                        id="aviso-estoque"
-                        class="aviso-estoque"
-                        hidden
-                        role="alert"
-                    >
-                        Quantidade maior que o estoque disponível.
-                    </p>
+                    <a href="{% url 'historico_vendas' %}"
+                       class="link-historico">
+                        Ver histórico completo
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
                 </div>
 
-                {{ formulario.nome_cliente.label_tag }}
-                {{ formulario.nome_cliente }}
-                {{ formulario.nome_cliente.errors }}
+                {% if historico %}
 
-                {{ formulario.forma_pagamento.label_tag }}
-                {{ formulario.forma_pagamento }}
-                {{ formulario.forma_pagamento.errors }}
+                    <!-- TABELA DESKTOP -->
+                    <div class="tabela-rolagem">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Produto</th>
+                                    <th>Quantidade</th>
+                                    <th>Preço unitário</th>
+                                    <th>Total</th>
+                                    <th>Funcionário</th>
+                                </tr>
+                            </thead>
 
-                <!-- Aviso mostrado apenas quando a venda é fiada -->
-                <p
-                    id="ajuda-pagamento"
-                    class="ajuda-pagamento"
-                    hidden
-                >
-                    A forma de pagamento será informada quando o cliente quitar o fiado.
-                </p>
+                            <tbody>
+                                {% for venda in historico %}
+                                    <tr>
+                                        <td>
+                                            {{ venda.data_venda|date:"d/m/Y" }}
+                                            <span class="tabela-secundario">
+                                                {{ venda.data_venda|date:"H:i" }}
+                                            </span>
+                                        </td>
 
-                {{ formulario.situacao_pagamento.label_tag }}
-                {{ formulario.situacao_pagamento }}
-                {{ formulario.situacao_pagamento.errors }}
+                                        <td>
+                                            <span class="tabela-produto">
+                                                {{ venda.produto.nome }}
+                                            </span>
+                                        </td>
 
-                {% if formulario.non_field_errors %}
-                    <div class="erros">
-                        {{ formulario.non_field_errors }}
+                                        <td>
+                                            <span class="selo">
+                                                {{ venda.quantidade }} un.
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            R$ {{ venda.preco_unitario|floatformat:2 }}
+                                        </td>
+
+                                        <td class="valor-total">
+                                            R$ {{ venda.total|floatformat:2 }}
+                                        </td>
+
+                                        <td>
+                                            {{ venda.funcionario.username }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
+
+                    <!-- CARTÕES MOBILE -->
+                    <div class="historico-mobile">
+                        {% for venda in historico %}
+                            <article class="historico-item">
+
+                                <div class="historico-item-topo">
+                                    <strong>{{ venda.produto.nome }}</strong>
+                                    <span class="selo">
+                                        {{ venda.quantidade }} un.
+                                    </span>
+                                </div>
+
+                                <p>
+                                    <i class="bi bi-calendar3"></i>
+                                    {{ venda.data_venda|date:"d/m/Y H:i" }}
+                                </p>
+
+                                <p>
+                                    <i class="bi bi-cash-stack"></i>
+                                    Unitário:
+                                    R$ {{ venda.preco_unitario|floatformat:2 }}
+                                </p>
+
+                                <p>
+                                    <i class="bi bi-receipt"></i>
+                                    <strong>
+                                        Total: R$ {{ venda.total|floatformat:2 }}
+                                    </strong>
+                                </p>
+
+                                <p>
+                                    <i class="bi bi-person"></i>
+                                    {{ venda.funcionario.username }}
+                                </p>
+
+                            </article>
+                        {% endfor %}
+                    </div>
+
+                {% else %}
+
+                    <div class="lista-vazia">
+                        <i class="bi bi-cart-x"></i>
+                        Nenhuma venda registrada até o momento.
+                        <p>
+                            As vendas realizadas aparecerão aqui automaticamente.
+                        </p>
+                    </div>
+
                 {% endif %}
 
-                <button type="submit">
-                    Confirmar venda
-                </button>
-            </form>
-        </section>
+            </section>
 
-        <!-- ÚLTIMAS VENDAS -->
-        <section class="card">
-            <h2>Últimas vendas</h2>
+            <footer class="rodape">
+                Casa das Bicicletas — Gestão de vendas.
+                Os valores e as quantidades são obtidos dos registros do sistema.
+            </footer>
 
-            <div class="tabela">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Produto</th>
-                            <th>Quantidade</th>
-                            <th>Preço unitário</th>
-                            <th>Total</th>
-                            <th>Funcionário</th>
-                        </tr>
-                    </thead>
+        </main>
+    </div>
 
-                    <tbody>
-                        {% for venda in historico %}
-                            <tr>
-                                <td>
-                                    {{ venda.data_venda|date:"d/m/Y H:i" }}
-                                </td>
+    <!-- NAVEGAÇÃO MOBILE -->
+    <nav class="mobile-navegacao" aria-label="Navegação mobile">
 
-                                <td>
-                                    {{ venda.produto.nome }}
-                                </td>
+        <a href="{% url 'dashboard' %}" class="mobile-link">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Início</span>
+        </a>
 
-                                <td>
-                                    {{ venda.quantidade }}
-                                </td>
+        <a href="{% url 'produtos' %}" class="mobile-link">
+            <i class="bi bi-bicycle"></i>
+            <span>Produtos</span>
+        </a>
 
-                                <td>
-                                    R$ {{ venda.preco_unitario|floatformat:2 }}
-                                </td>
+        <a href="{% url 'vendas' %}"
+           class="mobile-link ativo"
+           aria-current="page">
+            <i class="bi bi-cart3"></i>
+            <span>Vendas</span>
+        </a>
 
-                                <td>
-                                    R$ {{ venda.total|floatformat:2 }}
-                                </td>
+        <a href="{% url 'historico_vendas' %}" class="mobile-link">
+            <i class="bi bi-receipt"></i>
+            <span>Histórico</span>
+        </a>
 
-                                <td>
-                                    {{ venda.funcionario.username }}
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="6">
-                                    Nenhuma venda registrada até o momento.
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        <a href="{% url 'controle_estoque' %}" class="mobile-link">
+            <i class="bi bi-box-seam"></i>
+            <span>Estoque</span>
+        </a>
 
-    </main>
+    </nav>
 
-    <!-- DADOS ENVIADOS PELO DJANGO -->
-    {{ precos_produtos|json_script:"dados-precos-produtos" }}
+</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+<!-- DADOS DOS PRODUTOS ENVIADOS PELO DJANGO -->
+{{ precos_produtos|json_script:"dados-precos-produtos" }}
 
-            const elementoDados = document.getElementById(
-                "dados-precos-produtos"
-            );
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-            const produtos = JSON.parse(
-                elementoDados.textContent
-            );
+        const elementoDados = document.getElementById(
+            "dados-precos-produtos"
+        );
 
-            const campoProduto = document.getElementById(
-                "id_produto"
-            );
+        const produtos = JSON.parse(elementoDados.textContent);
 
-            const campoQuantidade = document.getElementById(
-                "id_quantidade"
-            );
+        const campoProduto = document.getElementById("id_produto");
+        const campoQuantidade = document.getElementById("id_quantidade");
 
-            const precoElemento = document.getElementById(
-                "preco-unitario"
-            );
+        const precoElemento = document.getElementById("preco-unitario");
+        const estoqueElemento = document.getElementById("estoque-disponivel");
+        const totalElemento = document.getElementById("total-venda");
+        const quantidadeResumo = document.getElementById("quantidade-resumo");
+        const avisoEstoque = document.getElementById("aviso-estoque");
 
-            const estoqueElemento = document.getElementById(
-                "estoque-disponivel"
-            );
-
-            const totalElemento = document.getElementById(
-                "total-venda"
-            );
-
-            const avisoEstoque = document.getElementById(
-                "aviso-estoque"
-            );
-
-            const moeda = new Intl.NumberFormat("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            });
-
-            // RESUMO AUTOMÁTICO DA VENDA
-            function atualizarResumo() {
-                const produto = produtos[campoProduto.value];
-
-                const quantidade = Number(
-                    campoQuantidade.value
-                );
-
-                if (!produto) {
-                    precoElemento.textContent = moeda.format(0);
-                    estoqueElemento.textContent = "—";
-                    totalElemento.textContent = moeda.format(0);
-                    avisoEstoque.hidden = true;
-                    return;
-                }
-
-                const preco = Number(produto.preco);
-                const estoque = Number(produto.estoque);
-
-                precoElemento.textContent = moeda.format(preco);
-                estoqueElemento.textContent = estoque;
-
-                const quantidadeValida =
-                    Number.isInteger(quantidade) &&
-                    quantidade > 0;
-
-                if (quantidadeValida) {
-                    totalElemento.textContent = moeda.format(
-                        preco * quantidade
-                    );
-                } else {
-                    totalElemento.textContent = moeda.format(0);
-                }
-
-                avisoEstoque.hidden = !(
-                    quantidadeValida &&
-                    quantidade > estoque
-                );
-            }
-
-            campoProduto.addEventListener(
-                "change",
-                atualizarResumo
-            );
-
-            campoQuantidade.addEventListener(
-                "input",
-                atualizarResumo
-            );
-
-            // COMPORTAMENTO DA FORMA DE PAGAMENTO
-            const campoSituacao = document.getElementById(
-                "id_situacao_pagamento"
-            );
-
-            const campoFormaPagamento = document.getElementById(
-                "id_forma_pagamento"
-            );
-
-            const ajudaPagamento = document.getElementById(
-                "ajuda-pagamento"
-            );
-
-            function atualizarFormaPagamento() {
-                const fiado = campoSituacao.value === "fiado";
-
-                if (fiado) {
-                    // Limpa a forma de pagamento anterior
-                    campoFormaPagamento.value = "";
-
-                    // Desativa o campo para vendas fiadas
-                    campoFormaPagamento.disabled = true;
-                    campoFormaPagamento.required = false;
-
-                    // Explica por que o campo está desativado
-                    ajudaPagamento.hidden = false;
-                } else {
-                    // Reativa o campo para vendas pagas
-                    campoFormaPagamento.disabled = false;
-                    campoFormaPagamento.required = true;
-
-                    ajudaPagamento.hidden = true;
-                }
-            }
-
-            campoSituacao.addEventListener(
-                "change",
-                atualizarFormaPagamento
-            );
-
-            // Executa as duas verificações ao abrir a página
-            atualizarResumo();
-            atualizarFormaPagamento();
-
+        const moeda = new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL"
         });
-    </script>
+
+        /* CÁLCULO AUTOMÁTICO DA VENDA */
+
+        function atualizarResumo() {
+
+            const produto = produtos[campoProduto.value];
+            const quantidade = Number(campoQuantidade.value);
+
+            const quantidadeValida =
+                campoQuantidade.value.trim() !== "" &&
+                Number.isInteger(quantidade) &&
+                quantidade > 0;
+
+            quantidadeResumo.textContent = quantidadeValida
+                ? quantidade + " un."
+                : "0 un.";
+
+            if (!produto) {
+                precoElemento.textContent = moeda.format(0);
+                estoqueElemento.textContent = "—";
+                totalElemento.textContent = moeda.format(0);
+                avisoEstoque.hidden = true;
+                return;
+            }
+
+            const preco = Number(produto.preco);
+            const estoque = Number(produto.estoque);
+
+            precoElemento.textContent = moeda.format(preco);
+            estoqueElemento.textContent = estoque + " un.";
+
+            if (quantidadeValida) {
+                totalElemento.textContent = moeda.format(
+                    preco * quantidade
+                );
+            } else {
+                totalElemento.textContent = moeda.format(0);
+            }
+
+            avisoEstoque.hidden = !(
+                quantidadeValida &&
+                quantidade > estoque
+            );
+        }
+
+        campoProduto.addEventListener("change", atualizarResumo);
+        campoQuantidade.addEventListener("input", atualizarResumo);
+
+        /* COMPORTAMENTO DO FIADO */
+
+        const campoSituacao = document.getElementById(
+            "id_situacao_pagamento"
+        );
+
+        const campoFormaPagamento = document.getElementById(
+            "id_forma_pagamento"
+        );
+
+        const ajudaPagamento = document.getElementById(
+            "ajuda-pagamento"
+        );
+
+        function atualizarFormaPagamento() {
+
+            const fiado = campoSituacao.value === "fiado";
+
+            if (fiado) {
+                campoFormaPagamento.value = "";
+                campoFormaPagamento.disabled = true;
+                campoFormaPagamento.required = false;
+                ajudaPagamento.hidden = false;
+            } else {
+                campoFormaPagamento.disabled = false;
+                campoFormaPagamento.required = true;
+                ajudaPagamento.hidden = true;
+            }
+        }
+
+        campoSituacao.addEventListener(
+            "change",
+            atualizarFormaPagamento
+        );
+
+        /* ESTADO INICIAL */
+
+        atualizarResumo();
+        atualizarFormaPagamento();
+
+    });
+</script>
 
 </body>
 </html>

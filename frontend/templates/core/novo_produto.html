@@ -4,188 +4,679 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if modo_edicao %}Editar produto{% else %}Novo produto{% endif %} | Pedal Office</title>
 
+    <title>{% if modo_edicao %}Editar produto{% else %}Novo produto{% endif %} | Casa das Bicicletas</title>
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
+        :root {
+            --navy: #172131;
+            --red: #df352b;
+            --red-dark: #c52d24;
+            --orange: #ed6b23;
+            --wine: #842d49;
+            --yellow: #e49b12;
+            --bg: #f4f5f7;
+            --white: #ffffff;
+            --text: #1d293b;
+            --muted: #6c7890;
+            --border: #e3e7ee;
+        }
+
         * {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            background: #f5f5f5;
-            font-family: Arial, sans-serif;
-            color: #222;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        .app {
-            max-width: 620px;
-            margin: 14px auto;
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .cabecalho {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            border-bottom: 1px solid #e5e5e5;
-        }
-
-        .cabecalho a {
-            color: #333;
-            font-size: 18px;
+        a {
+            color: inherit;
             text-decoration: none;
         }
 
-        .cabecalho h1 {
+        button, input, select {
+            font: inherit;
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: var(--navy);
+            color: white;
+            padding: 25px 13px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 7px 28px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border-radius: 12px;
+            background: var(--red);
+            font-size: 24px;
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .menu-label {
+            padding: 27px 12px 12px;
+            color: #91a0b6;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 45px;
+            padding: 11px 13px;
+            border-radius: 9px;
+            color: #d0d7e2;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .menu a i {
+            width: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .menu a:hover {
+            background: #29364a;
+            color: white;
+        }
+
+        .menu a.active {
+            background: var(--red);
+            color: white;
+        }
+
+        .main {
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 79px;
+            padding: 18px 34px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb,
+        .user {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .breadcrumb i {
+            color: var(--red);
+            margin-right: 7px;
+        }
+
+        .user strong {
+            color: var(--text);
+            margin-left: 5px;
+        }
+
+        .content {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 34px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 27px;
+        }
+
+        .eyebrow {
+            color: var(--red);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow i {
+            font-size: 10px;
+            margin-right: 6px;
+        }
+
+        h1 {
+            margin: 10px 0;
+            font-size: 30px;
+            letter-spacing: -.6px;
+        }
+
+        .description {
             margin: 0;
-            font-size: 16px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
         }
 
-        form {
+        .back-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 17px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 0;
+        }
+
+        .card {
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 5px 22px rgba(20,30,50,.04);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 21px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #fff0e5;
+            color: var(--orange);
+            font-size: 19px;
+        }
+
+        .card-icon.wine {
+            background: #f8e9ef;
+            color: var(--wine);
+        }
+
+        .card-icon.yellow {
+            background: #fff4d9;
+            color: var(--yellow);
+        }
+
+        .card-title {
+            margin: 0 0 5px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .card-subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .card-body {
+            padding: 23px;
+        }
+
+        .field {
+            margin-bottom: 19px;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .field input:not([type="checkbox"]),
+        .field select {
+            display: block;
+            width: 100%;
+            min-height: 45px;
+            padding: 11px 13px;
+            background: white;
+            border: 1px solid #dce1e9;
+            border-radius: 9px;
+            color: var(--text);
+            outline: none;
+            font-size: 13px;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(223,53,43,.09);
+        }
+
+        .field input:disabled {
+            background: #f1f3f6;
+            color: var(--muted);
+            cursor: not-allowed;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .help {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .error {
+            margin-top: 7px;
+            color: #bd2823;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .error:empty {
+            display: none;
+        }
+
+        .error-box {
             padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 9px;
+            background: #fff0ef;
+            color: #bd2823;
+            font-size: 12px;
         }
 
-        .foto {
+        .photo-area {
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 5px;
-            height: 110px;
-            margin-bottom: 15px;
-            border: 1px dashed #ccc;
-            border-radius: 6px;
+            gap: 10px;
+            min-height: 200px;
+            padding: 18px;
+            border: 2px dashed #dce1e9;
+            border-radius: 11px;
+            background: #fafbfc;
             cursor: pointer;
-            color: #444;
+            text-align: center;
+        }
+
+        .photo-area:hover,
+        .photo-area:focus-within {
+            border-color: var(--red);
+        }
+
+        .photo-area > i {
+            color: var(--orange);
+            font-size: 32px;
+        }
+
+        .photo-area strong {
             font-size: 12px;
-            overflow: hidden;
         }
 
-        .foto i {
-            font-size: 24px;
+        .photo-area span {
+            max-width: 100%;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
         }
 
-        .foto input {
+        .photo-area input[type="file"] {
             position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
-            inset: 0;
             opacity: 0;
             cursor: pointer;
         }
 
-        .foto img {
+        .photo-preview {
+            display: none;
             max-width: 100%;
-            max-height: 100%;
+            max-height: 155px;
             object-fit: contain;
+            border-radius: 8px;
         }
 
-        .campo {
-            margin-bottom: 13px;
-        }
-
-        .campo label {
+        .photo-area.has-photo .photo-preview {
             display: block;
-            margin-bottom: 5px;
-            font-size: 12px;
         }
 
-        .campo input,
-        .campo select {
-            width: 100%;
-            height: 34px;
-            padding: 7px 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: white;
-            font-size: 13px;
+        .photo-area.has-photo > i {
+            display: none;
         }
 
-        .campo input:focus,
-        .campo select:focus {
-            outline: 2px solid #f59a23;
-            outline-offset: 1px;
-        }
-
-        .duas-colunas {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .promocao-box {
-            padding: 11px;
-            margin-bottom: 13px;
-            border: 1px solid #e5e5e5;
-            border-radius: 6px;
-        }
-
-        .promocao-check {
+        .promotion-toggle {
             display: flex;
             align-items: center;
-            gap: 7px;
-            margin-bottom: 10px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .promocao-check input {
-            accent-color: #1976d2;
-        }
-
-        .promocao-box .campo {
-            margin-bottom: 0;
-        }
-
-        .erro {
-            color: #c62828;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .btn-salvar,
-        .btn-cancelar {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            text-align: center;
-        }
-
-        .btn-salvar {
-            border: none;
-            background: #df382c;
-            color: white;
-            font-weight: bold;
+            gap: 11px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fafbfc;
             cursor: pointer;
         }
 
-        .btn-cancelar {
-            margin-top: 12px;
-            border: 1px solid #ccc;
-            background: white;
-            color: #333;
-            text-decoration: none;
+        .promotion-toggle input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--red);
+            flex-shrink: 0;
         }
 
-        @media (max-width: 650px) {
+        .promotion-toggle strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .promotion-toggle small {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        #promotion-price-field {
+            margin-top: 17px;
+        }
+
+        .notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 14px;
+            background: #fff6e5;
+            border-radius: 10px;
+            color: #82540f;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .notice i {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .notice a {
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 47px;
+            padding: 12px 22px;
+            border-radius: 9px;
+            border: 0;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .button-primary {
+            background: var(--red);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: var(--red-dark);
+        }
+
+        .button-secondary {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .footer {
+            margin-top: 28px;
+            color: #8794a6;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .mobile-header,
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 1100px) {
+            .content {
+                padding: 26px;
+            }
+
+            .form-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
             .app {
-                margin: 0;
-                min-height: 100vh;
-                border-radius: 0;
+                display: block;
+            }
+
+            .sidebar,
+            .topbar {
+                display: none;
+            }
+
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                min-height: 70px;
+                padding: 12px 18px;
+                background: var(--navy);
+                color: white;
+                border-bottom: 2px solid var(--red);
+            }
+
+            .mobile-brand {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .mobile-brand .brand-icon {
+                width: 39px;
+                height: 39px;
+                font-size: 22px;
+            }
+
+            .mobile-brand strong {
+                font-size: 13px;
+            }
+
+            .mobile-user {
+                font-size: 11px;
+                text-align: right;
+            }
+
+            .mobile-user strong {
+                display: block;
+                margin-top: 3px;
+            }
+
+            .mobile-nav {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 30;
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
+                background: white;
+                border-top: 1px solid var(--border);
+                box-shadow: 0 -4px 18px rgba(0,0,0,.04);
+            }
+
+            .mobile-nav a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                gap: 5px;
+                min-height: 47px;
+                color: #798596;
+                font-size: 10px;
+                font-weight: 700;
+            }
+
+            .mobile-nav a i {
+                font-size: 21px;
+            }
+
+            .mobile-nav a.active {
+                color: var(--red);
+            }
+
+            .main {
+                padding-bottom: 80px;
+            }
+
+            .content {
+                max-width: 780px;
+                margin: 0 auto;
+                padding: 25px 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 23px 14px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .page-heading {
+                align-items: stretch;
+            }
+
+            .back-link {
+                width: 100%;
+            }
+
+            .two-columns {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .card-header {
+                padding: 18px;
+            }
+
+            .card-body {
+                padding: 17px;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+            }
+
+            .actions .button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .mobile-header {
+                padding: 11px 12px;
+            }
+
+            .mobile-brand strong {
+                font-size: 12px;
+            }
+
+            .mobile-nav a {
+                font-size: 9px;
             }
         }
     </style>
@@ -195,118 +686,466 @@
 
 <div class="app">
 
-    <header class="cabecalho">
-        <a href="{% url 'produtos' %}" aria-label="Voltar">
-            <i class="bi bi-arrow-left"></i>
-        </a>        
-        <h1>{% if modo_edicao %}Editar produto{% else %}Novo produto{% endif %}</h1>
-
-    </header>
-
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        {% if formulario.non_field_errors %}
-            <div class="erro">
-                {{ formulario.non_field_errors }}
-            </div>
-        {% endif %}
-
-        <label class="foto" for="id_imagem" id="area-foto">
-            <i class="bi bi-camera"></i>
-            <span id="texto-foto">Adicionar foto</span>
-            {{ formulario.imagem }}
-        </label>
-        {% if formulario.imagem.errors %}
-            <div class="erro">{{ formulario.imagem.errors }}</div>
-        {% endif %}
-
-        <div class="campo">
-            <label for="id_nome">Nome do produto</label>
-            {{ formulario.nome }}
-            <div class="erro">{{ formulario.nome.errors }}</div>
-        </div>
-
-        <div class="campo">
-            <label for="id_categoria">Categoria</label>
-            {{ formulario.categoria }}
-            <div class="erro">{{ formulario.categoria.errors }}</div>
-        </div>
-
-        <div class="campo">
-            <label for="id_preco">Preço (R$)</label>
-            {{ formulario.preco }}
-            <div class="erro">{{ formulario.preco.errors }}</div>
-        </div>
-
-        <div class="duas-colunas">
-            <div class="campo">
-                <label for="id_quantidade">Quantidade</label>
-                {{ formulario.quantidade }}
-                <div class="erro">{{ formulario.quantidade.errors }}</div>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="bi bi-bicycle"></i>
             </div>
 
-            <div class="campo">
-                <label for="id_estoque_minimo">Avisar quando restar</label>
-                {{ formulario.estoque_minimo }}
-                <div class="erro">{{ formulario.estoque_minimo.errors }}</div>
+            <div class="brand-name">
+                Casa das<br>Bicicletas
             </div>
         </div>
 
-        <div class="promocao-box">
-            <label class="promocao-check" for="id_em_promocao">
-                {{ formulario.em_promocao }}
-                Produto em promoção
-            </label>
+        <div class="menu-label">Menu principal</div>
 
-            <div class="campo" id="campo-promocional">
-                <label for="id_preco_promocional">
-                    Preço promocional (R$)
-                </label>
-                {{ formulario.preco_promocional }}
-                <div class="erro">
-                    {{ formulario.preco_promocional.errors }}
+        <nav class="menu">
+            <a href="{% url 'dashboard' %}">
+                <i class="bi bi-grid-1x2-fill"></i>
+                Visão geral
+            </a>
+
+            <a href="{% url 'produtos' %}" class="{% if modo_edicao %}active{% endif %}">
+                <i class="bi bi-bicycle"></i>
+                Produtos
+            </a>
+
+            <a href="{% url 'novo_produto' %}" class="{% if not modo_edicao %}active{% endif %}">
+                <i class="bi bi-plus-square"></i>
+                Novo produto
+            </a>
+
+            <a href="{% url 'vendas' %}">
+                <i class="bi bi-cart3"></i>
+                Registrar venda
+            </a>
+
+            <a href="{% url 'historico_vendas' %}">
+                <i class="bi bi-receipt"></i>
+                Histórico de vendas
+            </a>
+
+            <a href="{% url 'controle_estoque' %}">
+                <i class="bi bi-box-seam"></i>
+                Controle de estoque
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main">
+
+        <header class="mobile-header">
+            <div class="mobile-brand">
+                <div class="brand-icon">
+                    <i class="bi bi-bicycle"></i>
                 </div>
+                <strong>Casa das Bicicletas</strong>
             </div>
-        </div>
 
-        <button type="submit" class="btn-salvar">
-            
-        {% if modo_edicao %}Salvar alterações{% else %}Salvar produto{% endif %}
+            <div class="mobile-user">
+                Olá,
+                <strong>{{ request.user.username }}</strong>
+            </div>
+        </header>
 
-        </button>
+        <header class="topbar">
+            <div class="breadcrumb">
+                <i class="bi bi-bicycle"></i>
+                Área administrativa /
+                {% if modo_edicao %}Editar produto{% else %}Novo produto{% endif %}
+            </div>
 
-        <a href="{% url 'produtos' %}" class="btn-cancelar">
-            Cancelar
-        </a>
+            <div class="user">
+                Olá, <strong>{{ request.user.username }}</strong>
+            </div>
+        </header>
 
-    </form>
+        <main class="content">
 
+            <div class="page-heading">
+                <div>
+                    <div class="eyebrow">
+                        <i class="bi bi-circle-fill"></i>
+                        Gestão de produtos
+                    </div>
+
+                    <h1>
+                        {% if modo_edicao %}
+                            Editar produto
+                        {% else %}
+                            Cadastrar novo produto
+                        {% endif %}
+                    </h1>
+
+                    <p class="description">
+                        {% if modo_edicao %}
+                            Atualize as informações do produto sem perder o histórico de estoque.
+                        {% else %}
+                            Adicione um novo produto ao catálogo da Casa das Bicicletas.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <a href="{% url 'produtos' %}" class="back-link">
+                    <i class="bi bi-arrow-left"></i>
+                    Voltar aos produtos
+                </a>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if formulario.non_field_errors %}
+                    <div class="error-box" role="alert">
+                        {{ formulario.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="form-grid">
+
+                    <div class="column">
+
+                        <section class="card">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <i class="bi bi-box-seam"></i>
+                                </div>
+                                <div>
+                                    <h2 class="card-title">Informações do produto</h2>
+                                    <p class="card-subtitle">Dados principais do catálogo</p>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="field">
+                                    <label for="id_nome">Nome do produto</label>
+                                    {{ formulario.nome }}
+                                    <div class="error">{{ formulario.nome.errors }}</div>
+                                </div>
+
+                                <div class="field">
+                                    <label for="id_categoria">Categoria</label>
+                                    {{ formulario.categoria }}
+                                    <div class="error">{{ formulario.categoria.errors }}</div>
+                                </div>
+
+                                <div class="field">
+                                    <label for="id_preco">Preço normal (R$)</label>
+                                    {{ formulario.preco }}
+                                    <div class="error">{{ formulario.preco.errors }}</div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <div class="card-icon yellow">
+                                    <i class="bi bi-boxes"></i>
+                                </div>
+                                <div>
+                                    <h2 class="card-title">Quantidades e estoque</h2>
+                                    <p class="card-subtitle">Quantidade e nível mínimo de segurança</p>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="two-columns">
+                                    <div class="field">
+                                        <label for="id_quantidade">
+                                            {% if modo_edicao %}
+                                                Quantidade atual
+                                            {% else %}
+                                                Quantidade inicial
+                                            {% endif %}
+                                        </label>
+
+                                        {{ formulario.quantidade }}
+
+                                        <div class="error">{{ formulario.quantidade.errors }}</div>
+
+                                        {% if modo_edicao %}
+                                            <span class="help">
+                                                Alterações de quantidade devem ser feitas pelo Controle de Estoque.
+                                            </span>
+                                        {% else %}
+                                            <span class="help">
+                                                A quantidade inicial será registrada como entrada no histórico.
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="field">
+                                        <label for="id_estoque_minimo">
+                                            Avisar quando restar
+                                        </label>
+
+                                        {{ formulario.estoque_minimo }}
+
+                                        <div class="error">{{ formulario.estoque_minimo.errors }}</div>
+
+                                        <span class="help">
+                                            Quantidade mínima para alerta de estoque baixo.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {% if modo_edicao %}
+                                    <div class="notice">
+                                        <i class="bi bi-shield-check"></i>
+                                        <span>
+                                            O estoque é controlado por entradas,
+                                            saídas e vendas.
+                                            <a href="{% url 'controle_estoque' %}">
+                                                Gerenciar estoque
+                                            </a>
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <div class="card-icon wine">
+                                    <i class="bi bi-tags"></i>
+                                </div>
+                                <div>
+                                    <h2 class="card-title">Promoções e descontos</h2>
+                                    <p class="card-subtitle">Configure ofertas para os clientes</p>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <label class="promotion-toggle" for="id_em_promocao">
+                                    {{ formulario.em_promocao }}
+                                    <span>
+                                        <strong>Produto em promoção</strong>
+                                        <small>Ative para informar um preço especial.</small>
+                                    </span>
+                                </label>
+
+                                <div class="field" id="promotion-price-field">
+                                    <label for="id_preco_promocional">
+                                        Preço promocional (R$)
+                                    </label>
+
+                                    {{ formulario.preco_promocional }}
+
+                                    <div class="error">
+                                        {{ formulario.preco_promocional.errors }}
+                                    </div>
+
+                                    <span class="help">
+                                        O preço promocional deve ser menor que o preço normal.
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <div class="column">
+
+                        <section class="card">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <i class="bi bi-image"></i>
+                                </div>
+                                <div>
+                                    <h2 class="card-title">Imagem do produto</h2>
+                                    <p class="card-subtitle">Foto exibida no catálogo</p>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <label class="photo-area" for="id_imagem" id="photo-area">
+                                    <i class="bi bi-camera"></i>
+
+                                    <img
+                                        id="photo-preview"
+                                        class="photo-preview"
+                                        alt="Prévia da foto do produto"
+                                        {% if modo_edicao and produto.imagem %}
+                                            src="{{ produto.imagem.url }}"
+                                        {% endif %}
+                                    >
+
+                                    <strong id="photo-title">
+                                        {% if modo_edicao and produto.imagem %}
+                                            Imagem atual
+                                        {% else %}
+                                            Selecionar imagem
+                                        {% endif %}
+                                    </strong>
+
+                                    <span id="photo-text">
+                                        Clique para escolher uma foto.
+                                    </span>
+
+                                    {{ formulario.imagem }}
+                                </label>
+
+                                <div class="error">{{ formulario.imagem.errors }}</div>
+
+                                <span class="help">
+                                    A foto é opcional. Prefira uma imagem nítida do produto.
+                                </span>
+
+                                {% if modo_edicao and produto.imagem %}
+                                    <span class="help">
+                                        <a href="{{ produto.imagem.url }}" target="_blank" rel="noopener">
+                                            Visualizar imagem cadastrada
+                                        </a>
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </section>
+
+                        <section class="card">
+                            <div class="card-header">
+                                <div class="card-icon yellow">
+                                    <i class="bi bi-lightbulb"></i>
+                                </div>
+                                <div>
+                                    <h2 class="card-title">Orientações</h2>
+                                    <p class="card-subtitle">Informações importantes</p>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="notice">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span>
+                                        {% if modo_edicao %}
+                                            Você pode atualizar nome, categoria,
+                                            preço, imagem, promoção e estoque mínimo.
+                                            Para movimentar mercadorias, utilize
+                                            o Controle de Estoque.
+                                        {% else %}
+                                            Ao cadastrar um produto com quantidade
+                                            inicial maior que zero, a entrada será
+                                            registrada no histórico de estoque.
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                </div>
+
+                <div class="actions">
+                    <a href="{% url 'produtos' %}" class="button button-secondary">
+                        <i class="bi bi-x-circle"></i>
+                        Cancelar
+                    </a>
+
+                    <button type="submit" class="button button-primary">
+                        <i class="bi bi-check-circle"></i>
+                        {% if modo_edicao %}
+                            Salvar alterações
+                        {% else %}
+                            Cadastrar produto
+                        {% endif %}
+                    </button>
+                </div>
+
+            </form>
+
+            <footer class="footer">
+                Casa das Bicicletas — Gestão de produtos.
+            </footer>
+
+        </main>
+    </div>
 </div>
 
+<nav class="mobile-nav" aria-label="Navegação mobile">
+    <a href="{% url 'dashboard' %}">
+        <i class="bi bi-grid-1x2-fill"></i>
+        Início
+    </a>
+
+    <a href="{% url 'produtos' %}" class="{% if modo_edicao %}active{% endif %}">
+        <i class="bi bi-bicycle"></i>
+        Produtos
+    </a>
+
+    <a href="{% url 'novo_produto' %}" class="{% if not modo_edicao %}active{% endif %}">
+        <i class="bi bi-plus-square"></i>
+        Novo
+    </a>
+
+    <a href="{% url 'controle_estoque' %}">
+        <i class="bi bi-box-seam"></i>
+        Estoque
+    </a>
+
+    <a href="{% url 'vendas' %}">
+        <i class="bi bi-cart3"></i>
+        Vendas
+    </a>
+</nav>
+
 <script>
-    const checkboxPromocao = document.getElementById('id_em_promocao');
-    const campoPromocional = document.getElementById('campo-promocional');
-    const inputPromocional = document.getElementById('id_preco_promocional');
+    document.addEventListener('DOMContentLoaded', function () {
+        const promotionCheckbox = document.getElementById('id_em_promocao');
+        const promotionField = document.getElementById('promotion-price-field');
+        const promotionInput = document.getElementById('id_preco_promocional');
 
-    function atualizarPromocao() {
-        campoPromocional.style.display =
-            checkboxPromocao.checked ? 'block' : 'none';
+        function updatePromotion() {
+            if (!promotionCheckbox || !promotionField || !promotionInput) {
+                return;
+            }
 
-        inputPromocional.disabled = !checkboxPromocao.checked;
-    }
+            const enabled = promotionCheckbox.checked;
 
-    checkboxPromocao.addEventListener('change', atualizarPromocao);
-    atualizarPromocao();
+            promotionField.style.display = enabled ? 'block' : 'none';
+            promotionInput.disabled = !enabled;
+        }
 
-    const inputImagem = document.getElementById('id_imagem');
-    const textoFoto = document.getElementById('texto-foto');
+        if (promotionCheckbox) {
+            promotionCheckbox.addEventListener('change', updatePromotion);
+            updatePromotion();
+        }
 
-    inputImagem.addEventListener('change', function () {
-        if (this.files.length > 0) {
-            textoFoto.textContent = this.files[0].name;
-        } else {
-            textoFoto.textContent = 'Adicionar foto';
+        const imageInput = document.getElementById('id_imagem');
+        const photoArea = document.getElementById('photo-area');
+        const photoPreview = document.getElementById('photo-preview');
+        const photoTitle = document.getElementById('photo-title');
+        const photoText = document.getElementById('photo-text');
+
+        if (imageInput && photoArea && photoPreview) {
+            if (photoPreview.getAttribute('src')) {
+                photoArea.classList.add('has-photo');
+            }
+
+            imageInput.addEventListener('change', function () {
+                const file = this.files && this.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                photoTitle.textContent = 'Imagem selecionada';
+                photoText.textContent = file.name;
+
+                if (!file.type.startsWith('image/')) {
+                    photoPreview.removeAttribute('src');
+                    photoArea.classList.remove('has-photo');
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+                    photoPreview.src = event.target.result;
+                    photoArea.classList.add('has-photo');
+                };
+
+                reader.readAsDataURL(file);
+            });
         }
     });
 </script>

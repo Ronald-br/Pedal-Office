@@ -1,22 +1,32 @@
 
-from django.core.exceptions import ValidationError
-
-from .forms import VendaForm
-from .models import Venda
-from .services import registrar_venda, quitar_fiado
-
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib import messages
-
-from .models import Produto, Loja, Venda
-from .forms import ProdutoForm
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.db.models import F, Sum
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
+from .forms import ProdutoForm, VendaForm
+from .models import Produto, Loja, Venda, MovimentacaoEstoque
+from .services import (
+    registrar_venda,
+    quitar_fiado,
+    registrar_entrada_estoque,
+    registrar_saida_estoque,
+)
+
+
+# ==========================================================
+# CATÁLOGO PÚBLICO
+# ==========================================================
 
 def inicio(request):
-    lista_produtos = Produto.objects.filter(ativo=True).order_by('-id')
+    lista_produtos = Produto.objects.filter(
+        ativo=True
+    ).order_by('-id')
 
     loja = Loja.objects.filter(ativa=True).first()
 
@@ -25,8 +35,16 @@ def inicio(request):
         'loja': loja,
     }
 
-    return render(request, 'core/inicio.html', contexto)
+    return render(
+        request,
+        'core/inicio.html',
+        contexto
+    )
 
+
+# ==========================================================
+# LOGIN DOS FUNCIONÁRIOS
+# ==========================================================
 
 def login_view(request):
     if request.method == 'POST':
@@ -43,22 +61,36 @@ def login_view(request):
             auth_login(request, user)
             return redirect('dashboard')
 
-        return render(request, 'core/login.html', {
-            'erro': 'Usuário ou senha inválidos, ou acesso não autorizado.'
-        })
+        return render(
+            request,
+            'core/login.html',
+            {
+                'erro': (
+                    'Usuário ou senha inválidos, '
+                    'ou acesso não autorizado.'
+                )
+            }
+        )
 
     return render(request, 'core/login.html')
 
 
+# ==========================================================
+# DASHBOARD ADMINISTRATIVO
+# ==========================================================
+
 @login_required(login_url='login')
-@user_passes_test(lambda user: user.is_staff, login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
 def dashboard(request):
-    from django.db.models import F, Sum
-    from django.utils import timezone
 
     hoje = timezone.localdate()
 
-    produtos_ativos = Produto.objects.filter(ativo=True)
+    produtos_ativos = Produto.objects.filter(
+        ativo=True
+    )
 
     vendas_do_mes = Venda.objects.filter(
         data_venda__year=hoje.year,
@@ -86,9 +118,12 @@ def dashboard(request):
 
     bikes_estoque = (
         produtos_ativos
-        .filter(categoria__in=['bike_nova', 'bike_usada'])
-        .aggregate(total=Sum('quantidade'))['total']
-        or 0
+        .filter(
+            categoria__in=['bike_nova', 'bike_usada']
+        )
+        .aggregate(
+            total=Sum('quantidade')
+        )['total'] or 0
     )
 
     contexto = {
@@ -100,16 +135,33 @@ def dashboard(request):
         'produtos_mais_vendidos': produtos_mais_vendidos,
     }
 
-    return render(request, 'core/dashboard.html', contexto)
+    return render(
+        request,
+        'core/dashboard.html',
+        contexto
+    )
 
+
+# ==========================================================
+# LISTAGEM DE PRODUTOS
+# ==========================================================
 
 @login_required(login_url='login')
-@user_passes_test(lambda user: user.is_staff, login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
 def produtos(request):
+
     lista_produtos = Produto.objects.all()
 
-    busca = request.GET.get('busca', '').strip()
-    categoria = request.GET.get('categoria', 'todos')
+    busca = request.GET.get(
+        'busca', ''
+    ).strip()
+
+    categoria = request.GET.get(
+        'categoria', 'todos'
+    )
 
     if busca:
         lista_produtos = lista_produtos.filter(
@@ -142,9 +194,17 @@ def produtos(request):
     )
 
 
+# ==========================================================
+# CADASTRO DE PRODUTOS
+# ==========================================================
+
 @login_required(login_url='login')
-@user_passes_test(lambda user: user.is_staff, login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
 def novo_produto(request):
+
     if request.method == 'POST':
         formulario = ProdutoForm(
             request.POST,
@@ -152,14 +212,39 @@ def novo_produto(request):
         )
 
         if formulario.is_valid():
-            formulario.save()
+            quantidade_inicial = formulario.cleaned_data['quantidade']
 
-            messages.success(
-                request,
-                'Produto cadastrado com sucesso!'
-            )
+            try:
+                with transaction.atomic():
+                    # Primeiro cadastra o produto com estoque zero.
+                    produto = formulario.save(commit=False)
+                    produto.quantidade = 0
+                    produto.save()
+                    formulario.save_m2m()
 
-            return redirect('produtos')
+                    # Registra a quantidade inicial como entrada,
+                    # sem duplicar as unidades no estoque.
+                    if quantidade_inicial > 0:
+                        registrar_entrada_estoque(
+                            produto_id=produto.id,
+                            quantidade=quantidade_inicial,
+                            funcionario=request.user,
+                            motivo='ajuste',
+                            observacao=(
+                                'Estoque inicial no cadastro do produto.'
+                            )
+                        )
+
+                messages.success(
+                    request,
+                    'Produto cadastrado com sucesso! '
+                    'Estoque inicial registrado.'
+                )
+
+                return redirect('produtos')
+
+            except ValidationError as erro:
+                formulario.add_error(None, erro)
 
     else:
         formulario = ProdutoForm()
@@ -167,14 +252,27 @@ def novo_produto(request):
     return render(
         request,
         'core/novo_produto.html',
-        {'formulario': formulario}
+        {
+            'formulario': formulario
+        }
     )
 
 
+# ==========================================================
+# EDIÇÃO DE PRODUTOS
+# ==========================================================
+
 @login_required(login_url='login')
-@user_passes_test(lambda user: user.is_staff, login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
 def editar_produto(request, produto_id):
-    produto = get_object_or_404(Produto, id=produto_id)
+
+    produto = get_object_or_404(
+        Produto,
+        id=produto_id
+    )
 
     if request.method == 'POST':
         formulario = ProdutoForm(
@@ -194,7 +292,9 @@ def editar_produto(request, produto_id):
             return redirect('produtos')
 
     else:
-        formulario = ProdutoForm(instance=produto)
+        formulario = ProdutoForm(
+            instance=produto
+        )
 
     return render(
         request,
@@ -207,9 +307,17 @@ def editar_produto(request, produto_id):
     )
 
 
+# ==========================================================
+# REGISTRO DE VENDAS
+# ==========================================================
+
 @login_required(login_url='login')
-@user_passes_test(lambda user: user.is_staff, login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
 def vendas(request):
+
     if request.method == 'POST':
         formulario = VendaForm(request.POST)
 
@@ -222,14 +330,21 @@ def vendas(request):
                     produto_id=produto.id,
                     quantidade=quantidade,
                     funcionario=request.user,
-                    nome_cliente=formulario.cleaned_data.get('nome_cliente'),
-                    forma_pagamento=formulario.cleaned_data.get('forma_pagamento'),
-                    situacao_pagamento=formulario.cleaned_data.get('situacao_pagamento'),
+                    nome_cliente=formulario.cleaned_data.get(
+                        'nome_cliente'
+                    ),
+                    forma_pagamento=formulario.cleaned_data.get(
+                        'forma_pagamento'
+                    ),
+                    situacao_pagamento=formulario.cleaned_data.get(
+                        'situacao_pagamento'
+                    ),
                 )
 
                 messages.success(
                     request,
-                    'Venda registrada com sucesso! Estoque atualizado.'
+                    'Venda registrada com sucesso! '
+                    'Estoque atualizado.'
                 )
 
                 return redirect('vendas')
@@ -240,10 +355,14 @@ def vendas(request):
     else:
         formulario = VendaForm()
 
-    historico = Venda.objects.select_related(
-        'produto',
-        'funcionario'
-    ).order_by('-data_venda')[:20]
+    historico = (
+        Venda.objects
+        .select_related(
+            'produto',
+            'funcionario'
+        )
+        .order_by('-data_venda')[:20]
+    )
 
     produtos_disponiveis = Produto.objects.filter(
         ativo=True,
@@ -274,15 +393,23 @@ def vendas(request):
     )
 
 
+# ==========================================================
+# HISTÓRICO DE VENDAS
+# ==========================================================
+
 @login_required(login_url='login')
 @user_passes_test(
     lambda user: user.is_staff,
     login_url='login'
 )
 def historico_vendas(request):
+
     historico = (
         Venda.objects
-        .select_related('produto', 'funcionario')
+        .select_related(
+            'produto',
+            'funcionario'
+        )
         .order_by('-data_venda')
     )
 
@@ -295,6 +422,10 @@ def historico_vendas(request):
     )
 
 
+# ==========================================================
+# QUITAÇÃO DE VENDAS FIADAS
+# ==========================================================
+
 @login_required(login_url='login')
 @user_passes_test(
     lambda user: user.is_staff,
@@ -302,6 +433,7 @@ def historico_vendas(request):
 )
 @require_POST
 def quitar_venda_fiada(request, venda_id):
+
     forma_pagamento = request.POST.get(
         'forma_pagamento', ''
     )
@@ -326,3 +458,144 @@ def quitar_venda_fiada(request, venda_id):
         )
 
     return redirect('historico_vendas')
+
+
+# ==========================================================
+# CONTROLE DE ESTOQUE
+# ==========================================================
+
+@login_required(login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
+def controle_estoque(request):
+
+    produtos_ativos = Produto.objects.filter(
+        ativo=True
+    ).order_by('nome')
+
+    # ------------------------------------------------------
+    # PROCESSAMENTO DE ENTRADAS E SAÍDAS
+    # ------------------------------------------------------
+
+    if request.method == 'POST':
+
+        produto_id = request.POST.get('produto')
+
+        tipo = request.POST.get(
+            'tipo', ''
+        ).strip()
+
+        motivo = request.POST.get(
+            'motivo', ''
+        ).strip()
+
+        observacao = request.POST.get(
+            'observacao', ''
+        ).strip()
+
+        try:
+            quantidade = int(
+                request.POST.get('quantidade', '')
+            )
+
+            if tipo == 'entrada':
+
+                registrar_entrada_estoque(
+                    produto_id=produto_id,
+                    quantidade=quantidade,
+                    funcionario=request.user,
+                    motivo=motivo,
+                    observacao=observacao
+                )
+
+                messages.success(
+                    request,
+                    'Entrada de mercadorias '
+                    'registrada com sucesso!'
+                )
+
+            elif tipo == 'saida':
+
+                registrar_saida_estoque(
+                    produto_id=produto_id,
+                    quantidade=quantidade,
+                    funcionario=request.user,
+                    motivo=motivo,
+                    observacao=observacao
+                )
+
+                messages.success(
+                    request,
+                    'Saída de mercadorias '
+                    'registrada com sucesso!'
+                )
+
+            else:
+                raise ValidationError(
+                    'Selecione um tipo de '
+                    'movimentação válido.'
+                )
+
+            return redirect('controle_estoque')
+
+        except (ValueError, TypeError):
+            messages.error(
+                request,
+                'Informe uma quantidade '
+                'numérica válida.'
+            )
+
+        except ValidationError as erro:
+            messages.error(
+                request,
+                ' '.join(erro.messages)
+            )
+
+    # ------------------------------------------------------
+    # HISTÓRICO DAS MOVIMENTAÇÕES
+    # ------------------------------------------------------
+
+    historico = (
+        MovimentacaoEstoque.objects
+        .select_related(
+            'produto',
+            'funcionario',
+            'venda'
+        )
+        .order_by(
+            '-data_movimentacao',
+            '-id'
+        )[:50]
+    )
+
+    # ------------------------------------------------------
+    # INDICADORES DE ESTOQUE
+    # ------------------------------------------------------
+
+    total_unidades = (
+        produtos_ativos
+        .aggregate(
+            total=Sum('quantidade')
+        )['total'] or 0
+    )
+
+    produtos_estoque_baixo = produtos_ativos.filter(
+        quantidade__lte=F('estoque_minimo')
+    )
+
+    contexto = {
+        'produtos': produtos_ativos,
+        'historico': historico,
+        'total_produtos': produtos_ativos.count(),
+        'total_unidades': total_unidades,
+        'total_estoque_baixo': produtos_estoque_baixo.count(),
+        'total_movimentacoes': MovimentacaoEstoque.objects.count(),
+    }
+
+    return render(
+        request,
+        'core/controle_estoque.html',
+        contexto
+    )

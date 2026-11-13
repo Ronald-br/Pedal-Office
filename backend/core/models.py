@@ -1,8 +1,14 @@
 
-from django.db import models
-from django.core.validators import MinValueValidator
 from decimal import Decimal
 
+from django.conf import settings
+from django.core.validators import MinValueValidator
+from django.db import models
+
+
+# ==========================================================
+# MODELO: PRODUTO
+# ==========================================================
 
 class Produto(models.Model):
 
@@ -62,8 +68,12 @@ class Produto(models.Model):
         verbose_name_plural = 'Produtos'
 
 
+# ==========================================================
+# MODELO: LOJA
+# ==========================================================
 
 class Loja(models.Model):
+
     nome = models.CharField(max_length=150)
 
     logo = models.ImageField(
@@ -96,10 +106,13 @@ class Loja(models.Model):
         verbose_name = 'Loja'
         verbose_name_plural = 'Lojas'
 
-from django.conf import settings
 
+# ==========================================================
+# MODELO: VENDA
+# ==========================================================
 
 class Venda(models.Model):
+
     produto = models.ForeignKey(
         Produto,
         on_delete=models.PROTECT,
@@ -123,7 +136,6 @@ class Venda(models.Model):
 
     data_venda = models.DateTimeField(auto_now_add=True)
 
-    
     FORMAS_PAGAMENTO = [
         ('dinheiro', 'Dinheiro'),
         ('pix', 'Pix'),
@@ -161,7 +173,6 @@ class Venda(models.Model):
         null=True
     )
 
-
     @property
     def total(self):
         return self.quantidade * self.preco_unitario
@@ -173,3 +184,77 @@ class Venda(models.Model):
         ordering = ['-data_venda']
         verbose_name = 'Venda'
         verbose_name_plural = 'Vendas'
+
+
+# ==========================================================
+# MODELO: MOVIMENTAÇÃO DE ESTOQUE
+# ==========================================================
+
+class MovimentacaoEstoque(models.Model):
+
+    TIPOS = [
+        ('entrada', 'Entrada'),
+        ('saida', 'Saída'),
+    ]
+
+    MOTIVOS = [
+        ('compra', 'Compra ou reposição'),
+        ('venda', 'Venda'),
+        ('perda', 'Perda'),
+        ('dano', 'Produto danificado'),
+        ('ajuste', 'Ajuste de inventário'),
+        ('outro', 'Outro'),
+    ]
+
+    produto = models.ForeignKey(
+        Produto,
+        on_delete=models.PROTECT,
+        related_name='movimentacoes_estoque'
+    )
+
+    tipo = models.CharField(
+        max_length=10,
+        choices=TIPOS
+    )
+
+    motivo = models.CharField(
+        max_length=20,
+        choices=MOTIVOS
+    )
+
+    quantidade = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)]
+    )
+
+    funcionario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT
+    )
+
+    observacao = models.TextField(
+        blank=True
+    )
+
+    venda = models.OneToOneField(
+        Venda,
+        on_delete=models.PROTECT,
+        related_name='movimentacao_estoque',
+        blank=True,
+        null=True
+    )
+
+    data_movimentacao = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f'{self.get_tipo_display()} - '
+            f'{self.produto.nome} - '
+            f'{self.quantidade} unidade(s)'
+        )
+
+    class Meta:
+        ordering = ['-data_movimentacao']
+        verbose_name = 'Movimentação de estoque'
+        verbose_name_plural = 'Movimentações de estoque'

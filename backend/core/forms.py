@@ -2,6 +2,7 @@
 from decimal import Decimal
 
 from django import forms
+
 from .models import Produto
 
 
@@ -41,6 +42,18 @@ class ProdutoForm(forms.ModelForm):
                 'placeholder': '0,00',
             }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Produtos existentes devem ter o estoque
+        # alterado somente pelo Controle de Estoque.
+        if self.instance and self.instance.pk:
+            self.fields['quantidade'].disabled = True
+            self.fields['quantidade'].help_text = (
+                'Para alterar a quantidade, utilize '
+                'a página Controle de Estoque.'
+            )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -134,4 +147,3 @@ class VendaForm(forms.Form):
             )
 
         return dados
-

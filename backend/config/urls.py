@@ -14,18 +14,23 @@ from core.views import (
     vendas,
     historico_vendas,
     quitar_venda_fiada,
+    controle_estoque,
 )
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # Catálogo público
     path('', inicio, name='inicio'),
 
+    # Autenticação
     path('login/', login_view, name='login'),
 
+    # Dashboard
     path('dashboard/', dashboard, name='dashboard'),
 
+    # Produtos
     path('produtos/', produtos, name='produtos'),
 
     path(
@@ -40,6 +45,7 @@ urlpatterns = [
         name='editar_produto'
     ),
 
+    # Vendas
     path(
         'vendas/',
         vendas,
@@ -56,6 +62,13 @@ urlpatterns = [
         'vendas/<int:venda_id>/quitar/',
         quitar_venda_fiada,
         name='quitar_venda_fiada'
+    ),
+
+    # Controle de estoque
+    path(
+        'estoque/',
+        controle_estoque,
+        name='controle_estoque'
     ),
 ]
 
