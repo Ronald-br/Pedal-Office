@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Entrar | Casa das Bicicletas</title>
 
     <link
@@ -85,7 +84,7 @@
             background: #ffffff;
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
         }
 
         /* PAINEL ESQUERDO */
@@ -164,7 +163,7 @@
         .aba-login.ativa {
             background: var(--vermelho);
             color: #ffffff;
-            box-shadow: 0 3px 10px rgba(229,57,53,0.2);
+            box-shadow: 0 3px 10px rgba(229, 57, 53, 0.2);
         }
 
         .aba-login:focus-visible,
@@ -174,7 +173,7 @@
             outline-offset: 3px;
         }
 
-        /* FORMULÁRIO */
+        /* FORMULÁRIOS */
 
         .form-label {
             font-weight: 600;
@@ -189,7 +188,7 @@
 
         .form-control:focus {
             border-color: var(--laranja);
-            box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
         }
 
         .btn-login {
@@ -227,11 +226,15 @@
 
         .link-cadastro {
             display: inline-block;
+            padding: 0;
+            border: 0;
+            background: transparent;
             color: var(--laranja-escuro);
             font-weight: 800;
             font-size: 0.95rem;
             text-decoration: underline;
             text-underline-offset: 4px;
+            cursor: pointer;
         }
 
         .link-cadastro:hover {
@@ -243,6 +246,46 @@
             font-size: 0.85rem;
             color: #777777;
             text-align: center;
+        }
+
+        .mensagem {
+            margin-bottom: 20px;
+            padding: 13px 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .mensagem.sucesso {
+            background: #e7f7ed;
+            color: #176b38;
+            border: 1px solid #b7e4c7;
+        }
+
+        .mensagem.erro {
+            background: #fff0f0;
+            color: #a32020;
+            border: 1px solid #f3c3c3;
+        }
+
+        .mensagem.info {
+            background: #fff5e9;
+            color: #92500d;
+            border: 1px solid #f7d9ae;
+        }
+
+        .cliente-conectado {
+            text-align: center;
+        }
+
+        .cliente-conectado .icone-sucesso {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .cliente-conectado .email-logado {
+            overflow-wrap: anywhere;
+            color: #555555;
         }
 
         .oculto {
@@ -339,15 +382,12 @@
     </header>
 
     <main class="area-login">
-
         <div class="login-container">
-
             <div class="row g-0">
 
                 <!-- PAINEL ESQUERDO -->
 
                 <div class="col-lg-6">
-
                     <section class="painel-apresentacao">
 
                         <div class="icone-bicicleta">
@@ -365,18 +405,20 @@
                         </p>
 
                     </section>
-
                 </div>
 
                 <!-- PAINEL DIREITO -->
 
                 <div class="col-lg-6">
-
                     <section class="painel-formulario">
 
                         <!-- ABAS -->
 
-                        <div class="abas-login" role="group" aria-label="Tipo de acesso">
+                        <div
+                            class="abas-login"
+                            role="group"
+                            aria-label="Tipo de acesso"
+                        >
 
                             <button
                                 type="button"
@@ -398,7 +440,7 @@
 
                         </div>
 
-                        <!-- LOGIN ADMINISTRATIVO -->
+                        <!-- LOGIN ADMINISTRATIVO DJANGO -->
 
                         <div id="painelAdmin">
 
@@ -415,7 +457,10 @@
 
                                 <div class="mb-3">
 
-                                    <label for="username" class="form-label">
+                                    <label
+                                        for="username"
+                                        class="form-label"
+                                    >
                                         Nome de usuário
                                     </label>
 
@@ -433,7 +478,10 @@
 
                                 <div class="mb-4">
 
-                                    <label for="password" class="form-label">
+                                    <label
+                                        for="password"
+                                        class="form-label"
+                                    >
                                         Senha
                                     </label>
 
@@ -449,7 +497,10 @@
 
                                 </div>
 
-                                <button type="submit" class="btn-login">
+                                <button
+                                    type="submit"
+                                    class="btn-login"
+                                >
                                     Entrar
                                 </button>
 
@@ -461,82 +512,239 @@
 
                         </div>
 
-                        <!-- LOGIN CLIENTE -->
+                        <!-- ÁREA DE CLIENTES FIREBASE -->
 
                         <div id="painelCliente" class="oculto">
 
-                            <h2>Entrar na sua conta</h2>
+                            <div
+                                id="mensagemCliente"
+                                class="mensagem oculto"
+                                role="status"
+                                aria-live="polite"
+                            ></div>
 
-                            <div class="mb-3">
+                            <!-- LOGIN CLIENTE -->
 
-                                <label for="emailCliente" class="form-label">
-                                    E-mail
-                                </label>
+                            <div id="areaLoginCliente">
 
-                                <input
-                                    type="email"
-                                    id="emailCliente"
-                                    class="form-control"
-                                    placeholder="Digite seu e-mail"
-                                    autocomplete="email"
-                                    disabled
-                                >
+                                <h2>Entrar na sua conta</h2>
+
+                                <form id="formLoginCliente">
+
+                                    <div class="mb-3">
+
+                                        <label
+                                            for="emailCliente"
+                                            class="form-label"
+                                        >
+                                            E-mail
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            id="emailCliente"
+                                            class="form-control"
+                                            placeholder="Digite seu e-mail"
+                                            autocomplete="email"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <div class="mb-4">
+
+                                        <label
+                                            for="senhaCliente"
+                                            class="form-label"
+                                        >
+                                            Senha
+                                        </label>
+
+                                        <input
+                                            type="password"
+                                            id="senhaCliente"
+                                            class="form-control"
+                                            placeholder="Digite sua senha"
+                                            autocomplete="current-password"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn-login"
+                                        id="btnEntrarCliente"
+                                    >
+                                        Entrar
+                                    </button>
+
+                                </form>
+
+                                <div class="area-cadastro">
+
+                                    <p>Ainda não tem conta?</p>
+
+                                    <button
+                                        type="button"
+                                        class="link-cadastro"
+                                        id="abrirCadastro"
+                                    >
+                                        Criar cadastro
+                                    </button>
+
+                                </div>
+
+                                <p class="aviso">
+                                    O catálogo pode ser acessado sem login.
+                                    Entre na sua conta para utilizar
+                                    os recursos exclusivos de clientes.
+                                </p>
 
                             </div>
 
-                            <div class="mb-4">
+                            <!-- CADASTRO CLIENTE -->
 
-                                <label for="senhaCliente" class="form-label">
-                                    Senha
-                                </label>
-
-                                <input
-                                    type="password"
-                                    id="senhaCliente"
-                                    class="form-control"
-                                    placeholder="Digite sua senha"
-                                    autocomplete="current-password"
-                                    disabled
-                                >
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="btn-login"
-                                disabled
+                            <div
+                                id="areaCadastroCliente"
+                                class="oculto"
                             >
-                                Entrar
-                            </button>
 
-                            <div class="area-cadastro">
+                                <h2>Criar minha conta</h2>
 
-                                <p>Ainda não tem conta?</p>
+                                <form id="formCadastroCliente">
 
-                                <span
-                                    class="link-cadastro"
-                                    title="Cadastro disponível após a integração com Firebase"
-                                >
-                                    Criar cadastro
-                                </span>
+                                    <div class="mb-3">
+
+                                        <label
+                                            for="emailCadastro"
+                                            class="form-label"
+                                        >
+                                            E-mail
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            id="emailCadastro"
+                                            class="form-control"
+                                            placeholder="Digite seu e-mail"
+                                            autocomplete="email"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <div class="mb-3">
+
+                                        <label
+                                            for="senhaCadastro"
+                                            class="form-label"
+                                        >
+                                            Senha
+                                        </label>
+
+                                        <input
+                                            type="password"
+                                            id="senhaCadastro"
+                                            class="form-control"
+                                            placeholder="Crie uma senha"
+                                            autocomplete="new-password"
+                                            minlength="6"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <div class="mb-4">
+
+                                        <label
+                                            for="confirmarSenhaCadastro"
+                                            class="form-label"
+                                        >
+                                            Confirmar senha
+                                        </label>
+
+                                        <input
+                                            type="password"
+                                            id="confirmarSenhaCadastro"
+                                            class="form-control"
+                                            placeholder="Digite a senha novamente"
+                                            autocomplete="new-password"
+                                            minlength="6"
+                                            required
+                                        >
+
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="btn-login"
+                                        id="btnCadastrarCliente"
+                                    >
+                                        Criar minha conta
+                                    </button>
+
+                                </form>
+
+                                <div class="area-cadastro">
+
+                                    <p>Já possui uma conta?</p>
+
+                                    <button
+                                        type="button"
+                                        class="link-cadastro"
+                                        id="voltarLoginCliente"
+                                    >
+                                        Voltar para o login
+                                    </button>
+
+                                </div>
 
                             </div>
 
-                            <p class="aviso">
-                                Cadastro de clientes em preparação.
-                            </p>
+                            <!-- CLIENTE CONECTADO -->
+
+                            <div
+                                id="areaClienteLogado"
+                                class="cliente-conectado oculto"
+                            >
+
+                                <div class="icone-sucesso">✅</div>
+
+                                <h2>Você está conectado!</h2>
+
+                                <p
+                                    id="emailClienteLogado"
+                                    class="email-logado"
+                                ></p>
+
+                                <a
+                                    href="{% url 'inicio' %}"
+                                    class="btn-login d-block text-decoration-none text-center"
+                                >
+                                    Ir para o catálogo
+                                </a>
+
+                                <button
+                                    type="button"
+                                    class="link-cadastro mt-4"
+                                    id="btnSairCliente"
+                                >
+                                    Sair da conta
+                                </button>
+
+                            </div>
 
                         </div>
 
                     </section>
-
                 </div>
 
             </div>
-
         </div>
-
     </main>
+
+    <!-- CONTROLE DAS ABAS -->
 
     <script>
         const abaCliente = document.getElementById("abaCliente");
@@ -551,8 +759,15 @@
             abaCliente.classList.toggle("ativa", cliente);
             abaAdmin.classList.toggle("ativa", !cliente);
 
-            abaCliente.setAttribute("aria-pressed", String(cliente));
-            abaAdmin.setAttribute("aria-pressed", String(!cliente));
+            abaCliente.setAttribute(
+                "aria-pressed",
+                String(cliente)
+            );
+
+            abaAdmin.setAttribute(
+                "aria-pressed",
+                String(!cliente)
+            );
 
             painelCliente.classList.toggle("oculto", !cliente);
             painelAdmin.classList.toggle("oculto", cliente);
@@ -565,6 +780,333 @@
         abaAdmin.addEventListener("click", () => {
             selecionarAba("admin");
         });
+
+        const parametros = new URLSearchParams(
+            window.location.search
+        );
+
+        if (parametros.get("tipo") === "cliente") {
+            selecionarAba("cliente");
+        }
+    </script>
+
+    <!-- AUTENTICAÇÃO FIREBASE PARA CLIENTES -->
+
+    <script type="module">
+
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlq6aJUNJDNbLRdstUhQ41ZqbaVB34cYg",
+            authDomain: "casa-das-bicicletas-8eeb4.firebaseapp.com",
+            projectId: "casa-das-bicicletas-8eeb4",
+            storageBucket: "casa-das-bicicletas-8eeb4.firebasestorage.app",
+            messagingSenderId: "1074255838691",
+            appId: "1:1074255838691:web:9745de4583b76a814df4d6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const areaLogin = document.getElementById(
+            "areaLoginCliente"
+        );
+
+        const areaCadastro = document.getElementById(
+            "areaCadastroCliente"
+        );
+
+        const areaLogado = document.getElementById(
+            "areaClienteLogado"
+        );
+
+        const mensagem = document.getElementById(
+            "mensagemCliente"
+        );
+
+        const formLogin = document.getElementById(
+            "formLoginCliente"
+        );
+
+        const formCadastro = document.getElementById(
+            "formCadastroCliente"
+        );
+
+        const btnEntrar = document.getElementById(
+            "btnEntrarCliente"
+        );
+
+        const btnCadastrar = document.getElementById(
+            "btnCadastrarCliente"
+        );
+
+        const urlCatalogo = "{% url 'inicio' %}";
+
+        let redirecionamentoPendente = false;
+
+        function mostrarMensagem(texto, tipo = "info") {
+            mensagem.textContent = texto;
+            mensagem.className = "mensagem " + tipo;
+        }
+
+        function limparMensagem() {
+            mensagem.textContent = "";
+            mensagem.className = "mensagem oculto";
+        }
+
+        function mostrarArea(area) {
+            areaLogin.classList.toggle(
+                "oculto",
+                area !== "login"
+            );
+
+            areaCadastro.classList.toggle(
+                "oculto",
+                area !== "cadastro"
+            );
+
+            areaLogado.classList.toggle(
+                "oculto",
+                area !== "logado"
+            );
+        }
+
+        function traduzirErro(erro) {
+            switch (erro.code) {
+                case "auth/email-already-in-use":
+                    return "Este e-mail já possui uma conta.";
+
+                case "auth/invalid-email":
+                    return "Digite um e-mail válido.";
+
+                case "auth/weak-password":
+                    return "A senha é muito fraca. Use uma senha mais segura.";
+
+                case "auth/invalid-credential":
+                case "auth/wrong-password":
+                case "auth/user-not-found":
+                    return "E-mail ou senha incorretos.";
+
+                case "auth/too-many-requests":
+                    return "Muitas tentativas. Aguarde um pouco e tente novamente.";
+
+                case "auth/network-request-failed":
+                    return "Falha de conexão. Verifique sua internet.";
+
+                case "auth/operation-not-allowed":
+                    return "O login por e-mail e senha não está habilitado no Firebase.";
+
+                case "auth/unauthorized-domain":
+                    return "Este domínio não está autorizado no Firebase.";
+
+                default:
+                    console.error("Erro Firebase:", erro);
+                    return "Não foi possível concluir a operação. Tente novamente.";
+            }
+        }
+
+        function concluirLogin() {
+            if (redirecionamentoPendente) {
+                return;
+            }
+
+            redirecionamentoPendente = true;
+
+            selecionarAba("cliente");
+            mostrarArea("logado");
+
+            const usuario = auth.currentUser;
+
+            document.getElementById(
+                "emailClienteLogado"
+            ).textContent = usuario?.email || "";
+
+            mostrarMensagem(
+                "Login concluído! Redirecionando para o catálogo...",
+                "sucesso"
+            );
+
+            window.setTimeout(() => {
+                window.location.assign(urlCatalogo);
+            }, 2000);
+        }
+
+        // ABRIR CADASTRO
+
+        document.getElementById(
+            "abrirCadastro"
+        ).addEventListener("click", () => {
+            limparMensagem();
+            mostrarArea("cadastro");
+        });
+
+        // VOLTAR AO LOGIN
+
+        document.getElementById(
+            "voltarLoginCliente"
+        ).addEventListener("click", () => {
+            limparMensagem();
+            mostrarArea("login");
+        });
+
+        // ENTRAR COMO CLIENTE
+
+        formLogin.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+
+            const email = document.getElementById(
+                "emailCliente"
+            ).value.trim();
+
+            const senha = document.getElementById(
+                "senhaCliente"
+            ).value;
+
+            limparMensagem();
+
+            btnEntrar.disabled = true;
+            btnEntrar.textContent = "Entrando...";
+
+            try {
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    senha
+                );
+
+                concluirLogin();
+
+            } catch (erro) {
+                mostrarMensagem(
+                    traduzirErro(erro),
+                    "erro"
+                );
+
+            } finally {
+                btnEntrar.disabled = false;
+                btnEntrar.textContent = "Entrar";
+            }
+        });
+
+        // CRIAR CONTA DE CLIENTE
+
+        formCadastro.addEventListener(
+            "submit",
+            async (evento) => {
+                evento.preventDefault();
+
+                const email = document.getElementById(
+                    "emailCadastro"
+                ).value.trim();
+
+                const senha = document.getElementById(
+                    "senhaCadastro"
+                ).value;
+
+                const confirmacao = document.getElementById(
+                    "confirmarSenhaCadastro"
+                ).value;
+
+                limparMensagem();
+
+                if (senha !== confirmacao) {
+                    mostrarMensagem(
+                        "As senhas não coincidem.",
+                        "erro"
+                    );
+                    return;
+                }
+
+                if (senha.length < 6) {
+                    mostrarMensagem(
+                        "A senha deve ter pelo menos 6 caracteres.",
+                        "erro"
+                    );
+                    return;
+                }
+
+                btnCadastrar.disabled = true;
+                btnCadastrar.textContent = "Criando conta...";
+
+                try {
+                    await createUserWithEmailAndPassword(
+                        auth,
+                        email,
+                        senha
+                    );
+
+                    concluirLogin();
+
+                } catch (erro) {
+                    mostrarMensagem(
+                        traduzirErro(erro),
+                        "erro"
+                    );
+
+                } finally {
+                    btnCadastrar.disabled = false;
+                    btnCadastrar.textContent = "Criar minha conta";
+                }
+            }
+        );
+
+        // SAIR DA CONTA
+
+        document.getElementById(
+            "btnSairCliente"
+        ).addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+
+                redirecionamentoPendente = false;
+
+                formLogin.reset();
+                formCadastro.reset();
+
+                mostrarArea("login");
+
+                mostrarMensagem(
+                    "Você saiu da sua conta.",
+                    "sucesso"
+                );
+
+            } catch (erro) {
+                mostrarMensagem(
+                    traduzirErro(erro),
+                    "erro"
+                );
+            }
+        });
+
+        // VERIFICAR SESSÃO EXISTENTE
+
+        onAuthStateChanged(auth, (usuario) => {
+            if (redirecionamentoPendente) {
+                return;
+            }
+
+            if (usuario) {
+                document.getElementById(
+                    "emailClienteLogado"
+                ).textContent = usuario.email || "";
+
+                mostrarArea("logado");
+
+            } else {
+                mostrarArea("login");
+            }
+        });
+
     </script>
 
 </body>

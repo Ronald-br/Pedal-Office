@@ -59,12 +59,14 @@
         .btn-entrar {
             display: inline-block;
             border: 1px solid var(--vermelho);
+            background: #ffffff;
             color: var(--vermelho);
             border-radius: 10px;
             font-weight: 600;
             text-decoration: none;
             padding: 10px 16px;
             white-space: nowrap;
+            cursor: pointer;
         }
 
         .btn-entrar:hover {
@@ -151,6 +153,8 @@
             box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
         }
 
+        /* FILTROS */
+
         .filtro {
             display: inline-block;
             padding: 10px 16px;
@@ -163,11 +167,34 @@
             transition: 0.2s;
         }
 
-        .filtro:hover,
+        .filtro:not(:disabled):hover,
         .filtro.ativo {
             background: var(--vermelho);
             color: #ffffff;
             border-color: var(--vermelho);
+        }
+
+        .filtro:disabled {
+            opacity: 1;
+            cursor: default;
+        }
+
+        /* FILTRO MEUS FAVORITOS */
+
+        .filtro-favoritos {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .icone-favoritos {
+            color: var(--vermelho);
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+
+        .filtro-favoritos.ativo .icone-favoritos {
+            color: #ffffff;
         }
 
         /* PRODUTOS */
@@ -229,6 +256,35 @@
         .btn-whatsapp:disabled {
             opacity: 0.65;
             cursor: not-allowed;
+        }
+
+        /* BOTÃO DE FAVORITOS NOS PRODUTOS */
+
+        .botao-favorito {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 2;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid #eeeeee;
+            background: #ffffff;
+            color: #e53935;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+        }
+
+        .botao-favorito:not(:disabled) {
+            cursor: pointer;
+        }
+
+        .botao-favorito:disabled {
+            opacity: 1;
+            cursor: default;
         }
 
         /* RODAPÉ */
@@ -301,16 +357,53 @@
 <!-- CABEÇALHO -->
 
 <header class="cabecalho sticky-top">
-    <div class="container py-3 d-flex justify-content-between align-items-center gap-3">
+    <div class="container py-3 d-flex justify-content-between align-items-center gap-3 flex-wrap">
 
         <a href="{% url 'inicio' %}" class="marca">
             <span class="marca-icone">🚲</span>
             <span>Casa das Bicicletas</span>
         </a>
 
-        <a href="{% url 'login' %}" class="btn-entrar">
-            Área administrativa
-        </a>
+        <!-- BOTÕES DE ACESSO -->
+        <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+
+            <!-- CLIENTE NÃO CONECTADO -->
+            <a
+                href="{% url 'login' %}?tipo=cliente"
+                id="botaoEntrarCliente"
+                class="btn-entrar"
+            >
+                Entrar como cliente
+            </a>
+
+            <!-- CLIENTE CONECTADO -->
+            <div
+                id="areaClienteConectado"
+                class="d-none align-items-center gap-2 flex-wrap"
+            >
+                <span
+                    id="emailCliente"
+                    class="small"
+                ></span>
+
+                <button
+                    type="button"
+                    id="botaoSairCliente"
+                    class="btn-entrar"
+                >
+                    Sair da conta
+                </button>
+            </div>
+
+            <!-- ÁREA ADMINISTRATIVA -->
+            <a
+                href="{% url 'login' %}"
+                class="btn-entrar"
+            >
+                Área administrativa
+            </a>
+
+        </div>
 
     </div>
 </header>
@@ -325,24 +418,24 @@
             <div class="row align-items-center g-4">
 
                 <div class="col-md-auto text-center">
-                  <div class="logo-loja">
+                    <div class="logo-loja">
 
-        {% if loja and loja.logo %}
+                        {% if loja and loja.logo %}
 
-            <img
-            src="{{ loja.logo.url }}"
-            alt="Logo da {{ loja.nome }}"
-            style="width: 100%; height: 100%; object-fit: contain; border-radius: 16px;"
-            >
+                            <img
+                                src="{{ loja.logo.url }}"
+                                alt="Logo da {{ loja.nome }}"
+                                style="width: 100%; height: 100%; object-fit: contain; border-radius: 16px;"
+                            >
 
-        {% else %}
+                        {% else %}
 
-            <span>🚲</span>
-            <small>Logo da loja</small>
+                            <span>🚲</span>
+                            <small>Logo da loja</small>
 
-            {% endif %}
+                        {% endif %}
 
-            </div>
+                    </div>
                 </div>
 
                 <div class="col-md">
@@ -351,19 +444,19 @@
                         Bicicletas, peças e acessórios
                     </h1>
 
-                <div class="informacoes-loja">
+                    <div class="informacoes-loja">
 
-    <p class="mb-2">
-        📍 <strong>Endereço:</strong>
-        {{ loja.endereco|default:"A cadastrar" }}
-    </p>
+                        <p class="mb-2">
+                            📍 <strong>Endereço:</strong>
+                            {{ loja.endereco|default:"A cadastrar" }}
+                        </p>
 
-    <p class="mb-0">
-        🕒 <strong>Funcionamento:</strong>
-        {{ loja.horario_funcionamento|default:"A cadastrar" }}
-    </p>
+                        <p class="mb-0">
+                            🕒 <strong>Funcionamento:</strong>
+                            {{ loja.horario_funcionamento|default:"A cadastrar" }}
+                        </p>
 
-    </div>
+                    </div>
 
                 </div>
 
@@ -400,7 +493,7 @@
 
         <!-- FILTROS -->
 
-        <div class="d-flex flex-wrap gap-2 mb-4" id="filtros">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-4" id="filtros">
 
             <button
                 type="button"
@@ -442,6 +535,19 @@
                 Acessórios
             </button>
 
+            <!-- FILTRO DE FAVORITOS -->
+            <button
+                type="button"
+                id="botaoMeusFavoritos"
+                class="filtro filtro-favoritos"
+                data-categoria="favoritos"
+                disabled
+                title="Em configuração"
+            >
+                <span class="icone-favoritos" aria-hidden="true">♡</span>
+                <span>Meus favoritos</span>
+            </button>
+
         </div>
 
         <!-- LISTA DE PRODUTOS -->
@@ -450,86 +556,106 @@
 
             {% for produto in produtos %}
 
-            <div
-                class="col-12 col-sm-6 col-lg-4 col-xl-3 item-produto"
-                data-nome="{{ produto.nome|lower }}"
-                data-categoria="{{ produto.categoria }}"
-            >
+                <div
+                    class="col-12 col-sm-6 col-lg-4 col-xl-3 item-produto"
+                    data-nome="{{ produto.nome|lower }}"
+                    data-categoria="{{ produto.categoria }}"
+                >
 
-                <article class="card produto-card">
+                    <!-- CARTÃO DO PRODUTO -->
+                    <article class="card produto-card position-relative">
 
-                    {% if produto.imagem %}
-
-                        <img
-                            src="{{ produto.imagem.url }}"
-                            alt="{{ produto.nome }}"
-                            class="produto-imagem"
-                        >
-
-                    {% else %}
-
-                        <div class="sem-imagem">
-                            🚲
-                        </div>
-
-                    {% endif %}
-
-                    <div class="card-body d-flex flex-column">
-
-                        <span class="text-secondary small mb-2">
-                            {{ produto.get_categoria_display }}
-                        </span>
-
-                        <h3 class="h6 fw-bold">
-                            {{ produto.nome }}
-                        </h3>
-
-                        {% if produto.em_promocao and produto.preco_promocional %}
-
-                            <div class="preco-antigo">
-                                R$ {{ produto.preco|floatformat:"2g" }}
-                            </div>
-
-                            <div class="preco mb-3">
-                                R$ {{ produto.preco_promocional|floatformat:"2g" }}
-                            </div>
-
-                        {% else %}
-
-                            <div class="preco mb-3">
-                                R$ {{ produto.preco|floatformat:"2g" }}
-                            </div>
-
-                        {% endif %}
-
-                        {% if produto.quantidade > 0 %}
-
-                            <span class="badge text-bg-success align-self-start mb-3">
-                                Disponível
-                            </span>
-
-                        {% else %}
-
-                            <span class="badge text-bg-secondary align-self-start mb-3">
-                                Indisponível
-                            </span>
-
-                        {% endif %}
-
+                        <!-- BOTÃO DE FAVORITOS -->
                         <button
                             type="button"
-                            class="btn-whatsapp mt-auto"
+                            class="botao-favorito"
+                            data-produto-id="{{ produto.id }}"
+                            aria-label="Adicionar {{ produto.nome }} aos favoritos"
+                            aria-pressed="false"
+                            title="Carregando favoritos"
                             disabled
-                            title="Contato em configuração"
                         >
-                            Conversar no WhatsApp
+                            ♡
                         </button>
 
-                    </div>
+                        <!-- IMAGEM DO PRODUTO -->
+                        {% if produto.imagem %}
 
-                </article>
+                            <img
+                                src="{{ produto.imagem.url }}"
+                                alt="{{ produto.nome }}"
+                                class="produto-imagem"
+                            >
 
-            </div>
+                        {% else %}
+
+                            <div class="sem-imagem">
+                                🚲
+                            </div>
+
+                        {% endif %}
+
+                        <!-- INFORMAÇÕES DO PRODUTO -->
+                        <div class="card-body d-flex flex-column">
+
+                            <span class="text-secondary small mb-2">
+                                {{ produto.get_categoria_display }}
+                            </span>
+
+                            <h3 class="h6 fw-bold">
+                                {{ produto.nome }}
+                            </h3>
+
+                            <!-- PREÇO -->
+                            {% if produto.em_promocao and produto.preco_promocional %}
+
+                                <div class="preco-antigo">
+                                    R$ {{ produto.preco|floatformat:"2g" }}
+                                </div>
+
+                                <div class="preco mb-3">
+                                    R$ {{ produto.preco_promocional|floatformat:"2g" }}
+                                </div>
+
+                            {% else %}
+
+                                <div class="preco mb-3">
+                                    R$ {{ produto.preco|floatformat:"2g" }}
+                                </div>
+
+                            {% endif %}
+
+                            <!-- DISPONIBILIDADE -->
+                            {% if produto.quantidade > 0 %}
+
+                                <span class="badge text-bg-success align-self-start mb-3">
+                                    Disponível
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge text-bg-secondary align-self-start mb-3">
+                                    Indisponível
+                                </span>
+
+                            {% endif %}
+
+                            <!-- WHATSAPP -->
+                            <button
+                                type="button"
+                                class="btn-whatsapp mt-auto"
+                                disabled
+                                title="Contato em configuração"
+                            >
+                                Conversar no WhatsApp
+                            </button>
+
+                        </div>
+
+                    </article>
+                    <!-- FIM DO CARTÃO DO PRODUTO -->
+
+                </div>
 
             {% empty %}
 
@@ -577,6 +703,9 @@
 
     let categoriaAtual = "todos";
 
+    // Estado compartilhado entre os filtros e o módulo do Firebase
+    window.favoritosDoCliente = new Set();
+
     function filtrarProdutos() {
         const termo = busca.value.toLocaleLowerCase("pt-BR").trim();
         let encontrados = 0;
@@ -586,9 +715,15 @@
             const categoria = produto.dataset.categoria;
 
             const correspondeNome = nome.includes(termo);
+
+            const produtoId = produto.querySelector(".botao-favorito")
+                ?.dataset.produtoId;
+
             const correspondeCategoria =
                 categoriaAtual === "todos" ||
-                categoria === categoriaAtual;
+                (categoriaAtual === "favoritos"
+                    ? window.favoritosDoCliente.has(produtoId)
+                    : categoria === categoriaAtual);
 
             const mostrar = correspondeNome && correspondeCategoria;
 
@@ -598,6 +733,10 @@
                 encontrados++;
             }
         });
+
+        semResultados.textContent = categoriaAtual === "favoritos"
+            ? "Você ainda não tem produtos favoritos para esta busca."
+            : "Nenhum produto encontrado para essa busca.";
 
         semResultados.classList.toggle(
             "d-none",
@@ -615,6 +754,287 @@
             categoriaAtual = botao.dataset.categoria;
             filtrarProdutos();
         });
+    });
+</script>
+
+<!-- AUTENTICAÇÃO E FAVORITOS DO CLIENTE NO CATÁLOGO -->
+
+<script type="module">
+    import {
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    import {
+        getFirestore,
+        collection,
+        doc,
+        getDocs,
+        setDoc,
+        deleteDoc,
+        serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    // Firebase da Casa das Bicicletas
+    const firebaseConfig = {
+        apiKey: "AIzaSyDlq6aJUNJDNbLRdstUhQ41ZqbaVB34cYg",
+        authDomain: "casa-das-bicicletas-8eeb4.firebaseapp.com",
+        projectId: "casa-das-bicicletas-8eeb4",
+        storageBucket: "casa-das-bicicletas-8eeb4.firebasestorage.app",
+        messagingSenderId: "1074255838691",
+        appId: "1:1074255838691:web:9745de4583b76a814df4d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Elementos da página
+    const botaoEntrarCliente =
+        document.getElementById("botaoEntrarCliente");
+
+    const areaClienteConectado =
+        document.getElementById("areaClienteConectado");
+
+    const emailCliente =
+        document.getElementById("emailCliente");
+
+    const botaoSairCliente =
+        document.getElementById("botaoSairCliente");
+
+    const botoesFavoritos =
+        document.querySelectorAll(".botao-favorito");
+
+    const botaoMeusFavoritos =
+        document.getElementById("botaoMeusFavoritos");
+
+    let favoritos = new Set();
+    let versaoSessao = 0;
+
+    // Atualiza o desenho e os textos dos corações
+    function atualizarCoracoes(visitante) {
+        botoesFavoritos.forEach(botao => {
+            const produtoId = botao.dataset.produtoId;
+            const marcado = !visitante && favoritos.has(produtoId);
+
+            const nomeProduto = botao.closest(".produto-card")
+                ?.querySelector("h3")?.textContent.trim() || "produto";
+
+            botao.textContent = marcado ? "♥" : "♡";
+            botao.setAttribute("aria-pressed", String(marcado));
+            botao.setAttribute(
+                "aria-label",
+                marcado
+                    ? `Remover ${nomeProduto} dos favoritos`
+                    : `Adicionar ${nomeProduto} aos favoritos`
+            );
+
+            botao.title = visitante
+                ? "Entre como cliente para favoritar"
+                : marcado
+                    ? "Remover dos favoritos"
+                    : "Adicionar aos favoritos";
+        });
+    }
+
+    // Identifica a conta e carrega os favoritos dela
+    onAuthStateChanged(auth, async (usuario) => {
+        const sessaoAtual = ++versaoSessao;
+
+        botoesFavoritos.forEach(botao => {
+            botao.disabled = true;
+        });
+
+        favoritos = new Set();
+        window.favoritosDoCliente = favoritos;
+
+        botaoMeusFavoritos.disabled = true;
+        botaoMeusFavoritos.title = usuario
+            ? "Carregando seus favoritos..."
+            : "Entre como cliente para ver seus favoritos";
+
+        // Ao mudar a sessão, volta para Todos se necessário
+        if (botaoMeusFavoritos.classList.contains("ativo")) {
+            document.querySelector(
+                '.filtro[data-categoria="todos"]'
+            )?.click();
+        } else {
+            filtrarProdutos();
+        }
+
+        if (!usuario) {
+            botaoEntrarCliente.classList.remove("d-none");
+            areaClienteConectado.classList.remove("d-flex");
+            areaClienteConectado.classList.add("d-none");
+            emailCliente.textContent = "";
+
+            atualizarCoracoes(true);
+
+            botoesFavoritos.forEach(botao => {
+                botao.disabled = false;
+            });
+
+            return;
+        }
+
+        botaoEntrarCliente.classList.add("d-none");
+        areaClienteConectado.classList.remove("d-none");
+        areaClienteConectado.classList.add("d-flex");
+        emailCliente.textContent = usuario.email || "Cliente conectado";
+
+        try {
+            const referencia = collection(
+                db, "usuarios", usuario.uid, "favoritos"
+            );
+
+            const resultado = await getDocs(referencia);
+
+            // Ignora dados antigos caso o usuário tenha saído
+            if (
+                sessaoAtual !== versaoSessao ||
+                auth.currentUser?.uid !== usuario.uid
+            ) {
+                return;
+            }
+
+            favoritos = new Set(
+                resultado.docs.map(documento => documento.id)
+            );
+
+            // Compartilha a lista com o filtro do catálogo
+            window.favoritosDoCliente = favoritos;
+
+            atualizarCoracoes(false);
+
+            // Ativa Meus favoritos somente após carregar os dados
+            botaoMeusFavoritos.disabled = false;
+            botaoMeusFavoritos.title = "Mostrar meus produtos favoritos";
+
+            // Atualiza os produtos exibidos
+            filtrarProdutos();
+
+            botoesFavoritos.forEach(botao => {
+                botao.disabled = false;
+            });
+
+        } catch (erro) {
+            console.error("Erro ao carregar favoritos:", erro);
+
+            if (
+                sessaoAtual === versaoSessao &&
+                auth.currentUser?.uid === usuario.uid
+            ) {
+                alert(
+                    "Não foi possível carregar seus favoritos. Atualize a página e tente novamente."
+                );
+            }
+        }
+    });
+
+    // Salva ou remove um produto favorito
+    botoesFavoritos.forEach(botao => {
+        botao.addEventListener("click", async () => {
+            if (botao.disabled) return;
+
+            const usuario = auth.currentUser;
+
+            if (!usuario) {
+                const entrar = confirm(
+                    "Entre na sua conta para salvar favoritos. Deseja fazer login agora?"
+                );
+
+                if (entrar) {
+                    window.location.href =
+                        "{% url 'login' %}?tipo=cliente";
+                }
+
+                return;
+            }
+
+            const sessaoDoClique = versaoSessao;
+            const produtoId = botao.dataset.produtoId;
+
+            const referencia = doc(
+                db,
+                "usuarios",
+                usuario.uid,
+                "favoritos",
+                produtoId
+            );
+
+            const jaEraFavorito = favoritos.has(produtoId);
+            botao.disabled = true;
+
+            try {
+                if (jaEraFavorito) {
+                    await deleteDoc(referencia);
+                } else {
+                    await setDoc(referencia, {
+                        produtoId: produtoId,
+                        criadoEm: serverTimestamp()
+                    });
+                }
+
+                if (
+                    sessaoDoClique === versaoSessao &&
+                    auth.currentUser?.uid === usuario.uid
+                ) {
+                    if (jaEraFavorito) {
+                        favoritos.delete(produtoId);
+                    } else {
+                        favoritos.add(produtoId);
+                    }
+
+                    atualizarCoracoes(false);
+
+                    // Atualiza o filtro imediatamente.
+                    // Se estiver em Meus favoritos e remover um
+                    // coração, o produto sai da lista.
+                    filtrarProdutos();
+                }
+
+            } catch (erro) {
+                console.error("Erro ao atualizar favorito:", erro);
+
+                if (sessaoDoClique === versaoSessao) {
+                    alert(
+                        "Não foi possível atualizar o favorito. Tente novamente."
+                    );
+                }
+
+            } finally {
+                if (
+                    sessaoDoClique === versaoSessao &&
+                    auth.currentUser?.uid === usuario.uid
+                ) {
+                    botao.disabled = false;
+                }
+            }
+        });
+    });
+
+    // Sair da conta sem fechar o catálogo
+    botaoSairCliente.addEventListener("click", async () => {
+        try {
+            botaoSairCliente.disabled = true;
+
+            await signOut(auth);
+
+            alert("Você saiu da sua conta com sucesso!");
+
+        } catch (erro) {
+            console.error("Erro ao sair da conta:", erro);
+
+            alert("Não foi possível sair da conta. Tente novamente.");
+
+        } finally {
+            botaoSairCliente.disabled = false;
+        }
     });
 </script>
 
