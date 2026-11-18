@@ -599,3 +599,30 @@ def controle_estoque(request):
         'core/controle_estoque.html',
         contexto
     )
+
+
+# ==========================================================
+# PAGINA MAIS - AREA ADMINISTRATIVA
+# ==========================================================
+
+@login_required(login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
+def mais(request):
+    return render(request, 'core/mais.html')
+
+
+# ==========================================================
+# SOBRE O SISTEMA - PEDAL OFFICE
+# ==========================================================
+
+@login_required(login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
+def sobre_sistema(request):
+    return render(request, 'core/sobre.html')
+

@@ -256,7 +256,7 @@
 
         .indicadores {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+           grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 18px;
             margin-bottom: 29px;
         }
@@ -635,7 +635,7 @@
                 left: 0;
                 z-index: 20;
                 display: grid;
-                grid-template-columns: repeat(4, minmax(0, 1fr));
+                grid-template-columns: repeat(5, minmax(0, 1fr));
                 padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
                 background: white;
                 border-top: 1px solid var(--borda);
@@ -821,6 +821,16 @@
                 <i class="bi bi-receipt"></i>
                 Histórico de vendas
             </a>
+
+
+            <a
+                href="{% url 'mais' %}"
+                class="menu-link"
+            >
+                <i class="bi bi-grid"></i>
+                Mais
+            </a>
+
 
         </nav>
 
@@ -1206,49 +1216,56 @@
 
     </div>
 
-    <!-- =====================================
-         NAVEGAÇÃO MOBILE
-    ====================================== -->
-    <nav
-        class="mobile-navegacao"
-        aria-label="Navegação mobile"
+    
+<!-- NAVEGAÇÃO INFERIOR MOBILE -->
+<nav
+    class="mobile-navegacao"
+    aria-label="Navegação mobile"
+>
+
+    <a
+        href="{% url 'dashboard' %}"
+        class="mobile-link ativo"
+        aria-current="page"
     >
+        <i class="bi bi-house-door"></i>
+        <span>Início</span>
+    </a>
 
-        <a
-            href="{% url 'dashboard' %}"
-            class="mobile-link ativo"
-            aria-current="page"
-        >
-            <i class="bi bi-grid-1x2-fill"></i>
-            <span>Início</span>
-        </a>
+    <a
+        href="{% url 'produtos' %}"
+        class="mobile-link"
+    >
+        <i class="bi bi-bicycle"></i>
+        <span>Produtos</span>
+    </a>
 
-        <a
-            href="{% url 'produtos' %}"
-            class="mobile-link"
-        >
-            <i class="bi bi-bicycle"></i>
-            <span>Produtos</span>
-        </a>
+    <a
+        href="{% url 'controle_estoque' %}"
+        class="mobile-link"
+    >
+        <i class="bi bi-box-seam"></i>
+        <span>Estoque</span>
+    </a>
 
-        <a
-            href="{% url 'vendas' %}"
-            class="mobile-link"
-        >
-            <i class="bi bi-cart3"></i>
-            <span>Vendas</span>
-        </a>
+    <a
+        href="{% url 'vendas' %}"
+        class="mobile-link"
+    >
+        <i class="bi bi-cart3"></i>
+        <span>Vendas</span>
+    </a>
 
-        <a
-            href="{% url 'historico_vendas' %}"
-            class="mobile-link"
-        >
-            <i class="bi bi-receipt"></i>
-            <span>Histórico</span>
-        </a>
+    <a
+        href="{% url 'mais' %}"
+        class="mobile-link"
+    >
+        <i class="bi bi-grid"></i>
+        <span>Mais</span>
+    </a>
 
-    </nav>
-
+</nav>
+    
 </div>
 
 </body>

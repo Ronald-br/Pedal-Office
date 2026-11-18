@@ -1,0 +1,549 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sobre o sistema | Pedal Office</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --vermelho: #dc352b;
+            --vermelho-escuro: #bd2922;
+            --laranja: #ed6b23;
+            --menu: #172131;
+            --fundo: #f5f6f8;
+            --texto: #202838;
+            --secundario: #697386;
+            --borda: #e7eaf0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 252px minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        /* MENU LATERAL */
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: var(--menu);
+            color: white;
+            padding: 27px 15px;
+        }
+
+        .marca {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 9px 28px;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .marca-icone {
+            display: grid;
+            place-items: center;
+            width: 46px;
+            height: 46px;
+            background: var(--vermelho);
+            border-radius: 13px;
+            font-size: 25px;
+        }
+
+        .marca strong {
+            font-size: 17px;
+            line-height: 1.3;
+        }
+
+        .menu-titulo {
+            padding: 27px 14px 10px;
+            color: #8997aa;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            border-radius: 10px;
+            color: #cbd3df;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .menu-link i {
+            font-size: 19px;
+        }
+
+        .menu-link:hover {
+            background: #273346;
+            color: white;
+        }
+
+        .menu-link.ativo {
+            background: var(--vermelho);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* CONTEÚDO PRINCIPAL */
+
+        .principal {
+            width: 100%;
+            padding: 35px 30px 100px;
+        }
+
+        .conteudo {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            margin-bottom: 28px;
+            border: 1px solid var(--borda);
+            border-radius: 11px;
+            background: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .voltar:hover {
+            background: #fff0ed;
+            color: var(--vermelho);
+        }
+
+        .titulo-pagina {
+            margin: 0 0 30px;
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        /* IDENTIDADE DO SISTEMA */
+
+        .identidade {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .identidade-icone {
+            display: grid;
+            place-items: center;
+            width: 88px;
+            height: 88px;
+            background: linear-gradient(
+                135deg,
+                var(--vermelho),
+                var(--laranja)
+            );
+            border-radius: 25px;
+            color: white;
+            font-size: 46px;
+            box-shadow: 0 8px 24px rgba(220,53,43,.17);
+        }
+
+        .identidade h2 {
+            margin: 19px 0 9px;
+            color: var(--vermelho);
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .versao {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            background: #fff0ed;
+            color: var(--vermelho-escuro);
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* DESCRIÇÃO */
+
+        .descricao {
+            margin: 8px 0 32px;
+            padding: 23px;
+            background: white;
+            border: 1px solid var(--borda);
+            border-radius: 17px;
+            text-align: center;
+        }
+
+        .descricao p {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* FUNCIONALIDADES */
+
+        .secao-titulo {
+            margin: 0 0 15px 4px;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .funcionalidades {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .funcionalidade {
+            display: flex;
+            align-items: center;
+            gap: 17px;
+            padding: 21px;
+            background: white;
+            border: 1px solid var(--borda);
+            border-radius: 16px;
+        }
+
+        .funcionalidade-icone {
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            width: 49px;
+            height: 49px;
+            border-radius: 13px;
+            background: #fff0ed;
+            color: var(--vermelho);
+            font-size: 24px;
+        }
+
+        .funcionalidade h3 {
+            margin: 0 0 7px;
+            font-size: 16px;
+        }
+
+        .funcionalidade p {
+            margin: 0;
+            color: var(--secundario);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .rodape {
+            margin-top: 35px;
+            color: var(--secundario);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* MENU INFERIOR MOBILE */
+
+        .mobile-navegacao {
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .app {
+                display: block;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .principal {
+                padding: 22px 18px 115px;
+            }
+
+            .titulo-pagina {
+                font-size: 24px;
+            }
+
+            .mobile-navegacao {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                padding: 10px 5px calc(10px + env(safe-area-inset-bottom));
+                background: white;
+                border-top: 1px solid var(--borda);
+                box-shadow: 0 -4px 18px rgba(0,0,0,.04);
+            }
+
+            .mobile-link {
+                display: flex;
+                flex: 1;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                color: var(--secundario);
+                font-size: 11px;
+            }
+
+            .mobile-link i {
+                font-size: 21px;
+            }
+
+            .mobile-link.ativo {
+                color: var(--vermelho);
+                font-weight: bold;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .identidade {
+                padding: 20px 10px 27px;
+            }
+
+            .identidade h2 {
+                font-size: 27px;
+            }
+
+            .descricao {
+                padding: 19px;
+            }
+
+            .funcionalidade {
+                padding: 17px;
+                gap: 13px;
+            }
+
+            .funcionalidade-icone {
+                width: 43px;
+                height: 43px;
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- MENU LATERAL DO COMPUTADOR -->
+
+    <aside class="sidebar">
+
+        <div class="marca">
+            <div class="marca-icone">
+                <i class="bi bi-bicycle"></i>
+            </div>
+
+            <strong>Casa das<br>Bicicletas</strong>
+        </div>
+
+        <div class="menu-titulo">Navegação</div>
+
+        <nav aria-label="Menu administrativo">
+
+            <a class="menu-link" href="{% url 'dashboard' %}">
+                <i class="bi bi-house-door"></i>
+                Início
+            </a>
+
+            <a class="menu-link" href="{% url 'produtos' %}">
+                <i class="bi bi-bicycle"></i>
+                Produtos
+            </a>
+
+            <a class="menu-link" href="{% url 'controle_estoque' %}">
+                <i class="bi bi-box-seam"></i>
+                Estoque
+            </a>
+
+            <a class="menu-link" href="{% url 'vendas' %}">
+                <i class="bi bi-cart3"></i>
+                Vendas
+            </a>
+
+            <a class="menu-link ativo" href="{% url 'mais' %}">
+                <i class="bi bi-grid"></i>
+                Mais
+            </a>
+
+        </nav>
+    </aside>
+
+    <!-- CONTEÚDO -->
+
+    <main class="principal">
+
+        <div class="conteudo">
+
+            <a class="voltar" href="{% url 'mais' %}">
+                <i class="bi bi-arrow-left"></i>
+                Voltar para Mais
+            </a>
+
+            <h1 class="titulo-pagina">Sobre o sistema</h1>
+
+            <!-- IDENTIDADE PEDAL OFFICE -->
+
+            <section class="identidade">
+
+                <div class="identidade-icone">
+                    <i class="bi bi-bicycle"></i>
+                </div>
+
+                <h2>Pedal Office</h2>
+
+                <span class="versao">
+                    Versão 1.0
+                </span>
+
+            </section>
+
+            <!-- DESCRIÇÃO -->
+
+            <section class="descricao">
+
+                <p>
+                    Sistema para lojas de bicicletas, peças e
+                    acessórios: catálogo para os clientes e
+                    controle de estoque e vendas para a equipe.
+                </p>
+
+            </section>
+
+            <!-- FUNCIONALIDADES -->
+
+            <h2 class="secao-titulo">
+                Funcionalidades do sistema
+            </h2>
+
+            <section class="funcionalidades">
+
+                <article class="funcionalidade">
+
+                    <div class="funcionalidade-icone">
+                        <i class="bi bi-shop"></i>
+                    </div>
+
+                    <div>
+                        <h3>Catálogo</h3>
+
+                        <p>
+                            Produtos e promoções para os clientes,
+                            com contato por WhatsApp em preparação.
+                        </p>
+                    </div>
+
+                </article>
+
+                <article class="funcionalidade">
+
+                    <div class="funcionalidade-icone">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+
+                    <div>
+                        <h3>Estoque</h3>
+
+                        <p>
+                            Controle de entradas, saídas e
+                            avisos de estoque baixo.
+                        </p>
+                    </div>
+
+                </article>
+
+                <article class="funcionalidade">
+
+                    <div class="funcionalidade-icone">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+
+                    <div>
+                        <h3>Vendas</h3>
+
+                        <p>
+                            Registro e consulta das vendas,
+                            incluindo o controle de fiado.
+                        </p>
+                    </div>
+
+                </article>
+
+            </section>
+
+            <p class="rodape">
+                Pedal Office © 2026 — Casa das Bicicletas
+            </p>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- MENU INFERIOR DO CELULAR -->
+
+<nav class="mobile-navegacao" aria-label="Navegação mobile">
+
+    <a class="mobile-link" href="{% url 'dashboard' %}">
+        <i class="bi bi-house-door"></i>
+        <span>Início</span>
+    </a>
+
+    <a class="mobile-link" href="{% url 'produtos' %}">
+        <i class="bi bi-bicycle"></i>
+        <span>Produtos</span>
+    </a>
+
+    <a class="mobile-link" href="{% url 'controle_estoque' %}">
+        <i class="bi bi-box-seam"></i>
+        <span>Estoque</span>
+    </a>
+
+    <a class="mobile-link" href="{% url 'vendas' %}">
+        <i class="bi bi-cart3"></i>
+        <span>Vendas</span>
+    </a>
+
+    <a class="mobile-link ativo" href="{% url 'mais' %}">
+        <i class="bi bi-grid"></i>
+        <span>Mais</span>
+    </a>
+
+</nav>
+
+</body>
+</html>

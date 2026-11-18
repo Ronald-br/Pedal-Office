@@ -49,11 +49,25 @@
         }
 
         .marca-icone {
+            width: 56px;
+            height: 56px;
+            flex: 0 0 56px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
             background: #fff0ed;
             color: var(--vermelho);
             border-radius: 12px;
-            padding: 8px 10px;
             font-size: 1.45rem;
+        }
+
+        .marca-icone img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
         }
 
         .btn-entrar {
@@ -97,7 +111,7 @@
             width: 140px;
             height: 140px;
             background: #fff4ef;
-            border: 2px dashed #f1b09c;
+            border: none;
             border-radius: 18px;
             display: flex;
             flex-direction: column;
@@ -309,8 +323,10 @@
             }
 
             .marca-icone {
+                width: 44px;
+                height: 44px;
+                flex-basis: 44px;
                 font-size: 1.2rem;
-                padding: 7px;
             }
 
             .btn-entrar {
@@ -360,7 +376,16 @@
     <div class="container py-3 d-flex justify-content-between align-items-center gap-3 flex-wrap">
 
         <a href="{% url 'inicio' %}" class="marca">
-            <span class="marca-icone">🚲</span>
+            <span class="marca-icone">
+                {% if loja and loja.logo %}
+                    <img
+                        src="{{ loja.logo.url }}"
+                        alt="Logo da Casa das Bicicletas"
+                    >
+                {% else %}
+                    🚲
+                {% endif %}
+            </span>
             <span>Casa das Bicicletas</span>
         </a>
 
@@ -641,14 +666,15 @@
                             {% endif %}
 
                             <!-- WHATSAPP -->
-                            <button
-                                type="button"
-                                class="btn-whatsapp mt-auto"
-                                disabled
-                                title="Contato em configuração"
-                            >
-                                Conversar no WhatsApp
-                            </button>
+                    <a
+                    href="https://wa.me/5588999212524?text=Ol%C3%A1%21%20Tenho%20interesse%20no%20produto%3A%20{{ produto.nome|urlencode }}"
+                    class="btn-whatsapp mt-auto"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="text-decoration: none;"
+                    >
+                    Conversar no WhatsApp
+                    </a>
 
                         </div>
 

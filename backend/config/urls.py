@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LogoutView
 
 from core.views import (
     inicio,
@@ -15,6 +16,8 @@ from core.views import (
     historico_vendas,
     quitar_venda_fiada,
     controle_estoque,
+    mais,
+    sobre_sistema,
 )
 
 
@@ -69,6 +72,19 @@ urlpatterns = [
         'estoque/',
         controle_estoque,
         name='controle_estoque'
+    ),
+
+        # Menu Mais
+    path('mais/', mais, name='mais'),
+
+    # Sobre o sistema
+    path('sobre/', sobre_sistema, name='sobre_sistema'),
+
+        # Encerrar sessão e voltar ao login
+    path(
+        'sair/',
+        LogoutView.as_view(next_page='login'),
+        name='sair'
     ),
 ]
 
