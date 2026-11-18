@@ -5,6 +5,8 @@ from django import forms
 
 from .models import Produto,Loja
 
+from django.contrib.auth import get_user_model
+
 
 class ProdutoForm(forms.ModelForm):
     class Meta:
@@ -209,3 +211,32 @@ class LojaForm(forms.ModelForm):
 
 
         return dados
+
+
+class PerfilForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+        ]
+
+        labels = {
+            'first_name': 'Nome',
+            'last_name': 'Sobrenome',
+            'email': 'E-mail',
+        }
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'placeholder': 'Digite seu nome',
+            }),
+            'last_name': forms.TextInput(attrs={
+                'placeholder': 'Digite seu sobrenome',
+            }),
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'Digite seu e-mail',
+            }),
+        }

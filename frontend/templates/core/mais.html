@@ -471,18 +471,18 @@
 
             <section class="opcoes" aria-label="Opções do sistema">
 
-                <button class="opcao" type="button" disabled>
-                    <span class="opcao-icone">
-                        <i class="bi bi-person-circle"></i>
-                    </span>
+                <a class="opcao" href="{% url 'meu_perfil' %}">
+        <span class="opcao-icone">
+            <i class="bi bi-person-circle"></i>
+        </span>
 
-                    <span class="opcao-texto">
-                        <strong>Meu perfil</strong>
-                        <small>Dados da conta — em breve</small>
-                    </span>
+        <span class="opcao-texto">
+            <strong>Meu perfil</strong>
+            <small>Visualizar e editar meus dados</small>
+        </span>
 
-                    <i class="bi bi-chevron-right opcao-seta"></i>
-                </button>
+        <i class="bi bi-chevron-right opcao-seta"></i>
+    </a>
 
                <a class="opcao" href="{% url 'configuracoes_loja' %}">
                 <span class="opcao-icone">

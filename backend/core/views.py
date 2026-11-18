@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from .forms import ProdutoForm, VendaForm, LojaForm
+from .forms import ProdutoForm, VendaForm, LojaForm, PerfilForm
 from .models import Produto, Loja, Venda, MovimentacaoEstoque
 from .services import (
     registrar_venda,
@@ -670,4 +670,29 @@ def configuracoes_loja(request):
         }
     )
 
+# ==========================================================
+# MEU PERFIL DO ADMINISTRADOR
+# ==========================================================
+
+@login_required(login_url='login')
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+def meu_perfil(request):
+    if request.method == 'POST':
+        form = PerfilForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                'Seu perfil foi atualizado com sucesso!'
+            )
+            return redirect('meu_perfil')
+    else:
+        form = PerfilForm(instance=request.user)
+
+    return render(
+        request,
+        'core/meu_perfil.html',
+        {'form': form}
+    )
 

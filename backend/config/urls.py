@@ -18,7 +18,8 @@ from core.views import (
     controle_estoque,
     mais,
     sobre_sistema,
- configuracoes_loja,
+    configuracoes_loja,
+    meu_perfil,
 )
 
 
@@ -81,6 +82,8 @@ urlpatterns = [
     # Sobre o sistema
     path('sobre/', sobre_sistema, name='sobre_sistema'),
 
+    # Meu perfil
+    path('perfil/', meu_perfil, name='meu_perfil'),
 
         # Configuracoes da loja
     path(
