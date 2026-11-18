@@ -665,16 +665,29 @@
 
                             {% endif %}
 
-                            <!-- WHATSAPP -->
-                    <a
-                    href="https://wa.me/5588999212524?text=Ol%C3%A1%21%20Tenho%20interesse%20no%20produto%3A%20{{ produto.nome|urlencode }}"
-                    class="btn-whatsapp mt-auto"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style="text-decoration: none;"
-                    >
-                    Conversar no WhatsApp
-                    </a>
+                           
+<!-- WHATSAPP -->
+{% if loja and loja.whatsapp %}
+    <a
+        href="https://wa.me/{{ loja.whatsapp }}?text=Ol%C3%A1%21%20Tenho%20interesse%20no%20produto%3A%20{{ produto.nome|urlencode }}"
+        class="btn-whatsapp mt-auto"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="text-decoration: none;"
+    >
+        Conversar no WhatsApp
+    </a>
+{% else %}
+    <button
+        type="button"
+        class="btn-whatsapp mt-auto"
+        disabled
+        title="WhatsApp da loja não cadastrado"
+    >
+        WhatsApp indisponível
+    </button>
+{% endif %}
+
 
                         </div>
 
@@ -694,6 +707,7 @@
             {% endfor %}
 
         </div>
+
 
         <p
             id="semResultados"

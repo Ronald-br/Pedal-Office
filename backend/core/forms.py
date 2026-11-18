@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from django import forms
 
-from .models import Produto
+from .models import Produto,Loja
 
 
 class ProdutoForm(forms.ModelForm):
@@ -145,5 +145,67 @@ class VendaForm(forms.Form):
                 'forma_pagamento',
                 'Informe como o cliente pagou.'
             )
+
+
+# ==========================================================
+# FORMULARIO DE CONFIGURACOES DA LOJA
+# ==========================================================
+
+class LojaForm(forms.ModelForm):
+    class Meta:
+        model = Loja
+
+        fields = [
+            'nome',
+            'logo',
+            'endereco',
+            'horario_funcionamento',
+            'whatsapp',
+        ]
+
+        labels = {
+            'nome': 'Nome da loja',
+            'logo': 'Logotipo',
+            'endereco': 'Endereço',
+            'horario_funcionamento': 'Horário de funcionamento',
+            'whatsapp': 'WhatsApp da loja',
+        }
+
+        widgets = {
+            'nome': forms.TextInput(attrs={
+                'placeholder': 'Ex.: Casa das Bicicletas',
+            }),
+            'endereco': forms.TextInput(attrs={
+                'placeholder': 'Endereço da loja',
+            }),
+            'horario_funcionamento': forms.TextInput(attrs={
+                'placeholder': 'Ex.: Segunda a sábado, 8h às 18h',
+            }),
+            'whatsapp': forms.TextInput(attrs={
+                'placeholder': 'Ex.: 88999212524',
+            }),
+        }
+
+    def clean_whatsapp(self):
+        telefone = self.cleaned_data.get('whatsapp', '').strip()
+
+        if not telefone:
+            return ''
+
+        digitos = ''.join(c for c in telefone if c.isdigit())
+
+        if len(digitos) in (10, 11):
+            digitos = '55' + digitos
+
+        if not (
+            digitos.startswith('55')
+            and len(digitos) in (12, 13)
+        ):
+            raise forms.ValidationError(
+                'Informe um WhatsApp brasileiro válido com DDD.'
+            )
+
+        return digitos
+
 
         return dados

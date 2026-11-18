@@ -18,6 +18,7 @@ from core.views import (
     controle_estoque,
     mais,
     sobre_sistema,
+ configuracoes_loja,
 )
 
 
@@ -79,6 +80,14 @@ urlpatterns = [
 
     # Sobre o sistema
     path('sobre/', sobre_sistema, name='sobre_sistema'),
+
+
+        # Configuracoes da loja
+    path(
+        'configuracoes/',
+        configuracoes_loja,
+        name='configuracoes_loja'
+    ),
 
         # Encerrar sessão e voltar ao login
     path(

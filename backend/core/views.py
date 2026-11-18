@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from .forms import ProdutoForm, VendaForm
+from .forms import ProdutoForm, VendaForm, LojaForm
 from .models import Produto, Loja, Venda, MovimentacaoEstoque
 from .services import (
     registrar_venda,
@@ -625,4 +625,49 @@ def mais(request):
 )
 def sobre_sistema(request):
     return render(request, 'core/sobre.html')
+
+
+# ==========================================================
+# CONFIGURACOES DA LOJA - PEDAL OFFICE
+# ==========================================================
+
+@login_required(login_url='login')
+@user_passes_test(
+    lambda user: user.is_staff,
+    login_url='login'
+)
+def configuracoes_loja(request):
+    loja = Loja.objects.filter(ativa=True).first()
+
+    if loja is None:
+        loja = Loja.objects.first()
+
+    if request.method == 'POST':
+        form = LojaForm(
+            request.POST,
+            request.FILES,
+            instance=loja
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                'Configurações da loja salvas com sucesso!'
+            )
+
+            return redirect('configuracoes_loja')
+    else:
+        form = LojaForm(instance=loja)
+
+    return render(
+        request,
+        'core/configuracoes_loja.html',
+        {
+            'form': form,
+            'loja': loja,
+        }
+    )
+
 
