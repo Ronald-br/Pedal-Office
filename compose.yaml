@@ -3,10 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-
     ports:
       - "127.0.0.1:8001:8000"
-
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Configure DJANGO_SECRET_KEY no arquivo .env}
     volumes:
       - ./docker-data/db.sqlite3:/app/db.sqlite3
       - ./docker-data/media:/app/backend/media
