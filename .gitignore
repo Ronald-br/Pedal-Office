@@ -24,3 +24,6 @@ __pycache__/
 
 # Imagens enviadas pelos usuários
 media/
+
+# Dados locais do Docker
+docker-data/
